@@ -1,17 +1,38 @@
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.ArrayList;
 
-public class BodyMassIndexTest {
-        //A class called `BodyMassIndexTest` will be used to test the public methods of your BodyMassIndex class (This should be a JUnit 5 test class).
+import static org.junit.jupiter.api.Assertions.*;
 
- //   class MyFirstJUnitJupiterTests {
-
-    //    private final Calculator calculator = new Calculator();
-//
-  //      @Test
-    //    void addition() {
-      //      assertEquals(2, calculator.add(1, 1));
-        }
-
-
+class BodyMassIndexTest {
+    private final BodyMassIndex BMI = new BodyMassIndex(1,1);
+    //First batch verifies the index calculation.
+    @Test
+    void testIndex() {
+        assertEquals(27.1, BMI.FindIndex(72, 200));
+    }
+    //Second batch tests each category.
+    @Test
+    void testUnderWeight(){
+        assertEquals("underweight.", BMI.FindCategory(13.6,""));
+    }
+    @Test
+    void testNormalWeight() {
+        assertEquals("normal.", BMI.FindCategory(20.3, ""));
+    }
+    @Test
+    void testOverWeight() {
+        assertEquals("overweight.", BMI.FindCategory(27.1, ""));
+    }
+    @Test
+    void testObeseWeight() {
+        assertEquals("obese.", BMI.FindCategory(40.3, ""));
+    }
+    //Third batch tests the third public method in BodyMassIndex.
+    @Test
+    void testBoss(){
+        BodyMassIndex bmi = new BodyMassIndex(72, 200);
+        assertEquals(27.1,bmi.index);
+        assertEquals("overweight.",bmi.category);
+    }
+}
