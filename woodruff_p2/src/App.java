@@ -31,54 +31,47 @@ public class App {
     private static double getUserHeight() {
         System.out.println("Please enter your height in inches.");
         Scanner in = new Scanner(System.in);                   //Clears the input cache and reads into a Buffer double.
-        double Buffer = in.nextInt();
+        double Buffer = in.nextDouble();
         return errorCheck(Buffer, 1);                   //Validates entry.
     }
     private static double getUserWeight() {
         System.out.println("Please enter your weight in pounds.");
         Scanner in = new Scanner(System.in);                    //Clears the input cache and reads into a Buffer double.
-        double Buffer = in.nextInt();
-        return errorCheck(Buffer, 2);                   //Validates entry.
+        double Buffer = in.nextDouble();
+        return errorCheck(Buffer, 2);                    //Validates entry.
     }
 
-    private static void displayBmiInfo(BodyMassIndex bmi) {
-        //This gets triggered after every entry
-        double Status = bmi.index;
-             if(Status < 18.5)  System.out.println("\nYou're underweight.");
-        else if(Status < 24.9)  System.out.println("\nYou're normal.");
-        else if(Status < 29.9)  System.out.println("\nYou're overweight.");
-        else if(Status >=30.0)  System.out.println("\nYou're obese.");
+    private static void displayBmiInfo(BodyMassIndex bmi) {     //Prints out the bmi score.
+        System.out.printf("\nYour index of %.1f means that you are %s", bmi.index, bmi.category);
     }
 
     private static void displayBmiStatistics(ArrayList<BodyMassIndex> bmiData) {
-
-        double summation = 0;                                   //Creates an intermediate variable to sum the array values.
-        for(int i=0; i<bmiData.size(); i++) summation = summation + bmiData.get(i).index;
-        double average = summation/bmiData.size();              //Uses the array's size data to obtain the average value.
-        average = Math.round(average * 10.0) / 10.0;            //Rounds to one decimal precision.
+        double average = calculateAverage(bmiData);
         System.out.println("\nYour average BMI was " + average + ".");
     }
 
     private static Boolean errorCheck(String Buffer){           //This errorCheck function validates the moreInput method.
         if(Buffer.matches("Y")) return true;
         if(Buffer.matches("N")) return false;
-        System.out.println("\nThat is an invalid entry.");
+        screenClear();                                          //Clears the screen and applies an error message.
         return moreInput();                                     //Recursive repeat upon error.
     }
 
     private static double errorCheck(double Buffer, int Version){
-        Scanner in = new Scanner(System.in);
-        if(Buffer > 0) {
-            return Buffer;
-        }
-        if(Buffer == 0){                                        //Special prompting for accepted but problematic cases.
-            System.out.println("\nThat is technically allowed, but will cause problems.\nPlease enter your final choice: ");
-            Buffer = in.nextInt();
-            if(Buffer >=0) return Buffer;
-        }
-        System.out.println("\nThat is an invalid entry!");      //Recursive repeat upon error.
-        if(Version == 1) return getUserHeight();
+        if(Buffer > 0) return Buffer;                           //Entries of 0 are not positive and are thus invalid.
+        screenClear();                                          //Clears the screen and applies an error message.
+        if(Version == 1) return getUserHeight();                //Recursive repeat upon error.
         return getUserWeight();
     }
 
+    private static double calculateAverage(ArrayList<BodyMassIndex> bmiData){
+        double summation = 0;                                   //Creates an intermediate variable to sum the array values.
+        for(int i=0; i<bmiData.size(); i++) summation = summation + bmiData.get(i).index;
+        double average = summation/bmiData.size();              //Uses the array's size data to obtain the average value.
+        return Math.round(average * 10.0) / 10.0;               //Rounds to one decimal precision before returning.
+    }
+
+    private static void screenClear(){
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\nThat is an invalid entry.\n\n\n\n");
+    }
 }
