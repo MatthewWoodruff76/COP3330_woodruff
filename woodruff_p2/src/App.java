@@ -47,7 +47,7 @@ public class App {
 
     private static void displayBmiStatistics(ArrayList<BodyMassIndex> bmiData) {
         double average = calculateAverage(bmiData);
-        System.out.println("\nYour average BMI was " + average + ".");
+        System.out.printf("\nYour average BMI was %.1f.", average);
     }
 
     private static Boolean errorCheck(String Buffer){           //This errorCheck function validates the moreInput method.
@@ -67,8 +67,8 @@ public class App {
     private static double calculateAverage(ArrayList<BodyMassIndex> bmiData){
         double summation = 0;                                   //Creates an intermediate variable to sum the array values.
         for(int i=0; i<bmiData.size(); i++) summation = summation + bmiData.get(i).index;
-        double average = summation/bmiData.size();              //Uses the array's size data to obtain the average value.
-        return Math.round(average * 10.0) / 10.0;               //Rounds to one decimal precision before returning.
+        return Math.round(10.0*summation/bmiData.size())/10.0;  //Uses the array's size data to obtain the average value.
+
     }
 
     private static void screenClear(){

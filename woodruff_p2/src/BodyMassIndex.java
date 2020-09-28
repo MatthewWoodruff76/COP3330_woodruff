@@ -8,11 +8,11 @@ public class BodyMassIndex {
     }
     public String FindCategory(double index){  //Assigns a category.
         if(index < 18.5)        return "underweight.";
-        if(index < 24.9)        return "normal.";
-        if(index < 29.9)        return "overweight.";
+        if(index < 25)          return "normal.";
+        if(index < 30)          return "overweight.";
                                 return "obese.";
     }
     public double FindIndex(double height, double weight){
-         return 703 * weight / (height * height);       //Calculates BMI.
+         return Math.round(7030.0 * weight / (height * height))/10.0;       //Calculates BMI to the same precision as the official calculator.
     }
 }

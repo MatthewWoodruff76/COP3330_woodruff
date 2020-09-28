@@ -6,7 +6,7 @@ class BodyMassIndexTest {
     //First batch verifies the index method.
     @Test
     void testIndex() {
-        assertEquals(27.1, Math.round(BMI.FindIndex(72, 200)*10.0)/10.0);
+        assertEquals(27.1, BMI.FindIndex(72, 200));
     }
     //Second batch tests each category, and verifies the category method.
     @Test
@@ -29,7 +29,7 @@ class BodyMassIndexTest {
     @Test
     void testBoss(){
         BodyMassIndex bmi = new BodyMassIndex(72, 200);
-        assertEquals(27.1,Math.round(bmi.index*10.0)/10.0);
+        assertEquals(27.1,bmi.index);
         assertEquals("overweight.",bmi.category);
     }
 }
