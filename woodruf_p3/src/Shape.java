@@ -1,20 +1,14 @@
-interface Shape {
-    String getName();
-    double getArea();
-    double getVolume();
+abstract class Shape {
+    abstract String getName();
+    abstract double getArea();
 }
-interface Shape2D {
-    String getName();
-    double getArea();
-    double getVolume();
+abstract class Shape2D extends Shape{
 }
-interface Shape3D {
-    String getName();
-    double getArea();
-    double getVolume();
+abstract class Shape3D extends Shape{
+    abstract double getVolume();
 }
 
-class Square implements Shape, Shape2D {
+class Square extends Shape2D {
     public static double side = 0;
     public Square(double input) {
         side = input;
@@ -27,13 +21,9 @@ class Square implements Shape, Shape2D {
     public double getArea() {
         return side*side;
     }
-    @Override
-    public double getVolume() { //empty
-        return 0;
-    }
 }
 
-class Triangle implements Shape, Shape2D {
+class Triangle extends Shape2D {
     public static double length = 0;
     public static double width = 0;
     public Triangle(double input1, double input2) {
@@ -48,13 +38,9 @@ class Triangle implements Shape, Shape2D {
     public double getArea() { //Returns area
         return 0.5*width*length;
     }
-    @Override
-    public double getVolume() { //Empty
-        return 0;
-    }
 }
 
-class Circle implements Shape, Shape2D {
+class Circle extends Shape2D {
     public static double radius = 0;
     public Circle(double input) {
         radius = input;
@@ -67,13 +53,9 @@ class Circle implements Shape, Shape2D {
     public double getArea() { //Returns the area
         return Math.PI*radius*radius;
     }
-    @Override
-    public double getVolume() { //Empty
-        return 0;
-    }
 }
 
-class Cube implements Shape, Shape2D, Shape3D {
+class Cube extends Shape3D {
     public static double side = 0;
     public Cube(double input) {
         side = input;
@@ -92,7 +74,7 @@ class Cube implements Shape, Shape2D, Shape3D {
     }
 }
 
-class Pyramid implements Shape, Shape2D, Shape3D {
+class Pyramid extends Shape3D {
     public static double height = 0;
     public static double width = 0;
     public static double length = 0;
@@ -115,9 +97,6 @@ class Pyramid implements Shape, Shape2D, Shape3D {
     public double getVolume() { //Returns the volume
         return height*width*length/3.0;
     }
-    private double Pythag(double height, double width){ //Performs the Pythagorean equation
-        return Math.sqrt(height*height+width*width);
-    }
     private double base(double width, double length){
         return width*length;
     }
@@ -130,7 +109,7 @@ class Pyramid implements Shape, Shape2D, Shape3D {
 
 }
 
-class Sphere implements Shape, Shape2D, Shape3D {
+class Sphere extends Shape3D {
     public static double radius = 0;
     public Sphere(double input) {
         radius = input;
