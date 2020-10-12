@@ -2,7 +2,7 @@ abstract class Shape {
     abstract String getName();
     abstract double getArea();
 }
-abstract class Shape2D extends Shape{
+abstract class Shape2D extends Shape{ //Empty per rubic
 }
 abstract class Shape3D extends Shape{
     abstract double getVolume();
@@ -106,7 +106,6 @@ class Pyramid extends Shape3D {
     private double sideArea2(double length, double width, double height){
         return length*Math.sqrt(height*height+0.25*width*width);
     }
-
 }
 
 class Sphere extends Shape3D {
