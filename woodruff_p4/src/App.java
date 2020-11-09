@@ -2,21 +2,23 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
+import java.io.File;
+import java.io.IOException;
 
 public class App {
     public static void main(String[] args) {
+        TaskList Archive = new TaskList();
         int MainSelection = 1776;
         while(MainSelection != 3){
             PrintMainMenu();
             MainSelection = MenuHandler(3);
             if(MainSelection == 1){
-                ArrayList<TaskItem> Docket = new ArrayList<TaskItem>();
                 System.out.println("A new task list has been created.\n\n");
                 int OperationSelection = 1776;
                 while(OperationSelection != 8) {
                     PrintOperationMenu();
                     OperationSelection = MenuHandler(8);
-                    TaskAction(OperationSelection, Docket);
+                    TaskAction(OperationSelection, Archive.Docket);
                 }
             }
             if(MainSelection == 2){
@@ -32,7 +34,8 @@ public class App {
             String titleIn =        GetTitle();
             String descriptionIn =  GetDescription();
             String due_dateIn =     GetDue_Date();
-            TaskList.addTask(Docket, titleIn, descriptionIn, due_dateIn, false);
+            TaskItem Task = new TaskItem(titleIn, descriptionIn, due_dateIn, false);
+            Docket.add(Task);
         }
         if(selection == 3) {
             PrintAllTasks(Docket);
@@ -46,7 +49,7 @@ public class App {
             PrintAllTasks(Docket);
             System.out.println("\n\nSelect a task to remove: ");
             int index = MenuHandler(Docket.size()) - 1;
-            TaskList.removeTask(Docket, index);
+            Docket.remove(index);
         }
         if(selection == 5) {
             PrintTasksByCompletion(Docket,false);
