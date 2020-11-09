@@ -1,5 +1,5 @@
 public class TaskItem {     //Task item is just a structure that stores information.
-    public String title         =   "Blank";
+    protected String title         =   "Blank";
     public String description   =   "No";
     public String due_date      =   "0000-00-00";   //YYYY-MM-DD
     public boolean complete =   false;              //Status is 1 if complete, 0 if incomplete.
