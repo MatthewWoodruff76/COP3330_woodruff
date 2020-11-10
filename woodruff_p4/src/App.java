@@ -17,6 +17,7 @@ public class App {
         TaskList Archive = new TaskList();
         int MainSelection;
         do {
+            Archive = ClearArchive(Archive);
             int OperationSelection = -1;
             PrintMainMenu();
             while (OperationSelection == -1) OperationSelection = MenuHandler(3, GetInput(in));
@@ -55,6 +56,23 @@ public class App {
                 }
             }
         } while(MainSelection != 3);
+    }
+
+    private static TaskList ClearArchive(TaskList Archive) {
+        for(int index = Archive.Docket.size() - 1; index >= 0; index --) Archive.Docket.remove(index);
+        return Archive;
+    }
+    @Test public void ClearArchiveTest(){
+        TaskList expectedArchive = new TaskList();  //Creates a blank archive to compare with later.
+        TaskList Archive = new TaskList();          //Creates an archive to fill.
+        TaskItem Task = new TaskItem("Title", "Description", "3999-12-01", false);
+        Archive.Docket.add(Task);
+        Task = new TaskItem("Blank", "Nothing", "9999-09-25", true);
+        Archive.Docket.add(Task);
+        Task = new TaskItem("Something", "Tag", "3999-12-01", false);
+        Archive.Docket.add(Task);
+        Archive = ClearArchive(Archive);
+        assertEquals(expectedArchive.Docket.size(),Archive.Docket.size()); //Verifies that the archive was emptied.
     }
     private static void     OperationMenu(ArrayList<TaskItem> Docket) {
         int OperationSelection;
@@ -106,9 +124,9 @@ public class App {
         }
         if(selection == 5 || selection == 6) {
             index = -1;
-            boolean completion = true;
+            boolean completion = false;
             String suffix = "";
-            if(selection == 6) { completion = false; suffix = "in"; }
+            if(selection == 6) { completion = true; suffix = "in"; }
             PrintTasksByCompletion(Docket,completion);
             int[] key = GenerateCompletionKey(Docket, completion);
             if(key.length > 0) {
@@ -116,20 +134,11 @@ public class App {
                 while (index == -1) index = MenuHandler(key.length, GetInput(in)) - 1;
                 Docket.get(key[index]).complete = completion;
             }
-        }/*
-        if(selection == 6) {
-            index = -1;
-            PrintTasksByCompletion(Docket,true);
-            int[] key = GenerateCompletionKey(Docket, true);
-            if(key.length > 0) {
-                System.out.println("\n\nSelect a task to mark incomplete: ");
-                while (index == -1) index = MenuHandler(key.length,GetInput(in)) - 1;
-                Docket.get(key[index]).complete = false;
-            }
         }
-        */
         if(selection == 7) {
-            System.out.print("\n\nOutput file name (no extension required): ");
+            System.out.print("\n\nYou have chosen to save your progress.\n" +
+                    "After saving, you can close the task list with 8, or continue modifying it.\n" +
+                    "Output file name (no extension required): ");
             trigger = 0;
             String FileName = CreateFile(FileHandler(GetInput(in))+".txt");
             SaveTaskList(AmassListInfo(Docket), FileName);
@@ -146,7 +155,6 @@ public class App {
         }
     }
     public static String    CreateFile(String FileName){
-        FileName += ".txt";
         File file = new File(FileName);
         try {
             if (file.createNewFile()) {
@@ -338,7 +346,6 @@ public class App {
         } else return 3;
         return 1;
     }
-
 
     @Test public void SaveTaskListTest(){
         String name = "xXNoOneShouldEverNameTheirTaskThisXx";
@@ -565,4 +572,5 @@ public class App {
     @Test public void PastHandlerInvalid(){
         assertEquals(3,PastHandler(1776,2020,7,11,4,25));
     }
+
 }
