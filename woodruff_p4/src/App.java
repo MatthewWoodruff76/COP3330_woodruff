@@ -14,17 +14,17 @@ public class App {
     public static int trigger = 0;
     public static String AllOutput = "";
     public static void main(String[] args) {
-        TaskList Archive = new TaskList();
+        TaskList TaskList = new TaskList();
         int MainSelection;
         do {
-            Archive = ClearArchive(Archive);
+            TaskList = ClearTaskList(TaskList);
             int OperationSelection = -1;
             PrintMainMenu();
             while (OperationSelection == -1) OperationSelection = MenuHandler(3, GetInput(in));
             MainSelection = OperationSelection;
             if(MainSelection == 1){
                 System.out.println("A new task list has been created.\n\n");
-                OperationMenu(Archive.Docket);
+                OperationMenu(TaskList.TaskItem);
             }
             if(MainSelection == 2){
                 System.out.println("Input file name (no extension required): ");
@@ -42,7 +42,7 @@ public class App {
                         if((tally + 1) % 4 == 0) {
                             statusIn = Boolean.parseBoolean(placeholder);
                             TaskItem Task = new TaskItem(titleIn, descriptionIn, due_dateIn, statusIn);
-                            Archive.Docket.add(Task);
+                            TaskList.TaskItem.add(Task);
                         }
                         tally++;
                     }
@@ -52,87 +52,65 @@ public class App {
                 if(trigger == 1) System.out.println("\nThe file could not be found.\n");
                 else{
                     System.out.println("\nThe list was loaded successfully.\n");
-                    OperationMenu(Archive.Docket);
+                    OperationMenu(TaskList.TaskItem);
                 }
             }
         } while(MainSelection != 3);
     }
 
-    private static TaskList ClearArchive(TaskList Archive) {
-        for(int index = Archive.Docket.size() - 1; index >= 0; index --) Archive.Docket.remove(index);
-        return Archive;
+    private static TaskList ClearTaskList(TaskList TaskList) {
+        for(int index = TaskList.TaskItem.size() - 1; index >= 0; index --) TaskList.TaskItem.remove(index);
+        return TaskList;
     }
-    @Test public void ClearArchiveTest(){
-        TaskList expectedArchive = new TaskList();  //Creates a blank archive to compare with later.
-        TaskList Archive = new TaskList();          //Creates an archive to fill.
-        TaskItem Task = new TaskItem("Title", "Description", "3999-12-01", false);
-        Archive.Docket.add(Task);
-        Task = new TaskItem("Blank", "Nothing", "9999-09-25", true);
-        Archive.Docket.add(Task);
-        Task = new TaskItem("Something", "Tag", "3999-12-01", false);
-        Archive.Docket.add(Task);
-        Archive = ClearArchive(Archive);
-        assertEquals(expectedArchive.Docket.size(),Archive.Docket.size()); //Verifies that the archive was emptied.
-    }
-    private static void     OperationMenu(ArrayList<TaskItem> Docket) {
+    private static void     OperationMenu(ArrayList<TaskItem> TaskItem) {
         int OperationSelection;
         do {
             int TaskSelection = -1;
             PrintOperationMenu();
             while (TaskSelection == -1) TaskSelection = MenuHandler(8, GetInput(in));
             OperationSelection = TaskSelection;
-            TaskAction(TaskSelection, Docket);
+            TaskAction(TaskSelection, TaskItem);
         } while (OperationSelection != 8);
     }
-    private static void     TaskAction(int selection, ArrayList<TaskItem> Docket) {
+    private static void     TaskAction(int selection, ArrayList<TaskItem> TaskItem) {
         int index = -1;
-        if(selection == 1) PrintAllTasks(Docket);
+        if(selection == 1) PrintAllTasks(TaskItem);
         if(selection == 2) {
-            String titleIn = "#null#", descriptionIn = "#null#", due_dateIn = "#null#";
-            trigger = 0;
-            System.out.print("Task title: ");
-            while(trigger!=1)   titleIn =        TitleHandler(GetInput(in));
-            trigger = 0;
-            System.out.print("Task description: ");
-            while(trigger!=1)   descriptionIn =  DescriptionHandler((GetInput(in)));
-            System.out.print("Task due date (YYYY-MM-DD): ");
-            trigger = 0;
-            while(trigger!=1)   due_dateIn =     Due_DateHandler(GetInput(in));
-            TaskItem Task = new TaskItem(titleIn, descriptionIn, due_dateIn, false);
-            Docket.add(Task);
+            TaskItem Task = selectionTwo(TaskItem);
+            TaskItem.add(Task);
         }
         if(selection == 3) {
-            PrintAllTasks(Docket);
+            PrintAllTasks(TaskItem);
             System.out.println("\n\nSelect a task to edit: ");
-            while (index == -1) index = MenuHandler(Docket.size(), GetInput(in)) - 1;
+            while (index == -1) index = MenuHandler(TaskItem.size(), GetInput(in)) - 1;
             trigger = 0;
             System.out.print("New Task title: ");
-            while(trigger!=1)   Docket.get(index).title =           TitleHandler(GetInput(in));
+            while(trigger!=1)   TaskItem.get(index).title =           TitleHandler(GetInput(in));
             trigger = 0;
             System.out.print("New Task description: ");
-            while(trigger!=1)   Docket.get(index).description =     DescriptionHandler((GetInput(in)));
+            while(trigger!=1)   TaskItem.get(index).description =     DescriptionHandler((GetInput(in)));
             trigger = 0;
             System.out.print("New Task due date (YYYY-MM-DD): ");
-            while(trigger!=1)   Docket.get(index).due_date =        Due_DateHandler(GetInput(in));
+            while(trigger!=1)   TaskItem.get(index).due_date =        Due_DateHandler(GetInput(in));
         }
         if(selection == 4) {
             index = -1;
-            PrintAllTasks(Docket);
+            PrintAllTasks(TaskItem);
             System.out.println("\n\nSelect a task to remove: ");
-            while (index == -1) index = MenuHandler(Docket.size(), GetInput(in)) - 1;
-            Docket.remove(index);
+            while (index == -1) index = MenuHandler(TaskItem.size(), GetInput(in)) - 1;
+            TaskItem.remove(index);
         }
         if(selection == 5 || selection == 6) {
             index = -1;
             boolean completion = false;
             String suffix = "";
             if(selection == 6) { completion = true; suffix = "in"; }
-            PrintTasksByCompletion(Docket,completion);
-            int[] key = GenerateCompletionKey(Docket, completion);
+            PrintTasksByCompletion(TaskItem,completion);
+            int[] key = GenerateCompletionKey(TaskItem, completion);
             if(key.length > 0) {
                 System.out.println("\n\nSelect a task to mark " + suffix + "complete: ");
                 while (index == -1) index = MenuHandler(key.length, GetInput(in)) - 1;
-                Docket.get(key[index]).complete = completion;
+                TaskItem.get(key[index]).complete = completion;
             }
         }
         if(selection == 7) {
@@ -141,8 +119,22 @@ public class App {
                     "Output file name (no extension required): ");
             trigger = 0;
             String FileName = CreateFile(FileHandler(GetInput(in))+".txt");
-            SaveTaskList(AmassListInfo(Docket), FileName);
+            SaveTaskList(AmassListInfo(TaskItem), FileName);
         }
+    }
+    private static TaskItem selectionTwo(ArrayList<TaskItem> TaskItem) {
+        String titleIn = "#null#", descriptionIn = "#null#", due_dateIn = "#null#";
+        trigger = 0;
+        System.out.print("Task title: ");
+        while (trigger != 1) titleIn = TitleHandler(GetInput(in));
+        trigger = 0;
+        System.out.print("Task description: ");
+        while (trigger != 1) descriptionIn = DescriptionHandler((GetInput(in)));
+        System.out.print("Task due date (YYYY-MM-DD): ");
+        trigger = 0;
+        while (trigger != 1) due_dateIn = Due_DateHandler(GetInput(in));
+        TaskItem Task = new TaskItem(titleIn, descriptionIn, due_dateIn, false);
+        return Task;
     }
     private static void     SaveTaskList(String info, String FileName) {
         FileWriter writer = null;
@@ -166,10 +158,10 @@ public class App {
         } catch (IOException e) { e.printStackTrace(); }
         return FileName;
     }
-    private static String   AmassListInfo(ArrayList<TaskItem> Docket) {
+    private static String   AmassListInfo(ArrayList<TaskItem> TaskItem) {
         String ListInfo = "";                                           //Empty opening statement.
-        for(int index = 0; index < Docket.size(); index++){
-            ListInfo += AmassTaskInfo(Docket.get(index));
+        for(int index = 0; index < TaskItem.size(); index++){
+            ListInfo += AmassTaskInfo(TaskItem.get(index));
         }
         return ListInfo;
     }
@@ -177,15 +169,15 @@ public class App {
         return  TaskItem.title + "\n" + TaskItem.description + "\n"
                 + TaskItem.due_date + "\n" + TaskItem.complete + "\n" ;
     }
-    private static int[]    GenerateCompletionKey(ArrayList<TaskItem> Docket, boolean complete) {
+    private static int[]    GenerateCompletionKey(ArrayList<TaskItem> TaskItem, boolean complete) {
         int AmountValid = 0;
-        for (int index = 0; index < Docket.size(); index++) {
-            if (Docket.get(index).complete == complete) AmountValid++;
+        for (int index = 0; index < TaskItem.size(); index++) {
+            if (TaskItem.get(index).complete == complete) AmountValid++;
         }
         int[] key = new int[AmountValid];
         int position = 0;
-        for (int index = 0; index < Docket.size(); index++) {
-            if (Docket.get(index).complete == complete) {
+        for (int index = 0; index < TaskItem.size(); index++) {
+            if (TaskItem.get(index).complete == complete) {
                 key[position] = index;
                 position++;
             }
@@ -215,24 +207,24 @@ public class App {
                 "3) quit\n\n";
         System.out.println(AllOutput);
     }
-    private static void     PrintTasksByCompletion(ArrayList<TaskItem> Docket, boolean complete) {
+    private static void     PrintTasksByCompletion(ArrayList<TaskItem> TaskItem, boolean complete) {
         if(!complete)         AllOutput = "Current Incomplete Tasks\n------------------------\n\n";
         else         AllOutput = "Current Complete Tasks\n----------------------\n\n";
         int position = 0;
-        for(int index = 0; index < Docket.size();index ++) {
-            if(Docket.get(index).complete == complete) {
-                AllOutput += (position + 1) + ") [" + Docket.get(index).due_date + "] "
-                        + Docket.get(index).title + ": " + Docket.get(index).description + "\n";
+        for(int index = 0; index < TaskItem.size();index ++) {
+            if(TaskItem.get(index).complete == complete) {
+                AllOutput += (position + 1) + ") [" + TaskItem.get(index).due_date + "] "
+                        + TaskItem.get(index).title + ": " + TaskItem.get(index).description + "\n";
                 position++;
             }
         }
         System.out.println(AllOutput);
     }
-    private static void     PrintAllTasks(ArrayList<TaskItem> Docket) {
+    private static void     PrintAllTasks(ArrayList<TaskItem> TaskItem) {
         AllOutput = "Current Tasks\n-------------\n\n";
-        for(int index = 0; index < Docket.size();index ++) {
-            AllOutput += (index + 1) + ") [" + Docket.get(index).due_date + "] "
-                    + Docket.get(index).title + ": " + Docket.get(index).description + "\n";
+        for(int index = 0; index < TaskItem.size();index ++) {
+            AllOutput += (index + 1) + ") [" + TaskItem.get(index).due_date + "] "
+                    + TaskItem.get(index).title + ": " + TaskItem.get(index).description + "\n";
         }
         System.out.println(AllOutput);
     }
@@ -347,45 +339,56 @@ public class App {
         return 1;
     }
 
+    @Test public void ClearTaskListTest(){
+        TaskList expectedTaskList = new TaskList();  //Creates a blank TaskList to compare with later.
+        TaskList TaskList = new TaskList();          //Creates an TaskList to fill.
+        TaskItem Task = new TaskItem("Title", "Description", "3999-12-01", false);
+        TaskList.TaskItem.add(Task);
+        Task = new TaskItem("Blank", "Nothing", "9999-09-25", true);
+        TaskList.TaskItem.add(Task);
+        Task = new TaskItem("Something", "Tag", "3999-12-01", false);
+        TaskList.TaskItem.add(Task);
+        TaskList = ClearTaskList(TaskList);
+        assertEquals(expectedTaskList.TaskItem.size(),TaskList.TaskItem.size()); //Verifies that the TaskList was emptied.
+    }
     @Test public void SaveTaskListTest(){
-        String name = "xXNoOneShouldEverNameTheirTaskThisXx";
+        String name = "xXNoOneShouldEverNameTheirTaskThisXx.txt";
         String output = "";
-        File patsy = new File(name + ".txt");
-        patsy.delete();                                     //Removes possible duplicate files.
         CreateFile(name);                                   //Creates a file to save to
-        SaveTaskList(name,name + ".txt");                            //Saves the file name as its contents.
+        SaveTaskList(name,name);                            //Saves the file name as its contents.
         BufferedReader input = null;
         try {
-            input = new BufferedReader(new FileReader(name + ".txt"));
+            input = new BufferedReader(new FileReader(name));
             output = input.readLine();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        patsy.delete();                                     //Cleanup
-        assertEquals(name,output);
+        File patsy = new File(name);
+        patsy.delete();                                     //Cleanup.  This specific test does not
+        assertEquals(name,output);                          //properly delete the file (for unknown reasons).
     }
     @Test public void AmassListInfoTest(){
         String expectedString = "Title\nDescription\n3999-12-01\nfalse\n" +
                 "Blank\nNothing\n9999-09-25\ntrue\n";
-        TaskList Archive = new TaskList();
+        TaskList TaskList = new TaskList();
         TaskItem Task = new TaskItem("Title", "Description", "3999-12-01", false);
-        Archive.Docket.add(Task);
+        TaskList.TaskItem.add(Task);
         Task = new TaskItem("Blank", "Nothing", "9999-09-25", true);
-        Archive.Docket.add(Task);
-        assertEquals(expectedString,AmassListInfo(Archive.Docket));
+        TaskList.TaskItem.add(Task);
+        assertEquals(expectedString,AmassListInfo(TaskList.TaskItem));
     }
     @Test public void AmassTaskInfoTest(){
         String expectedString = "Title\nDescription\n3999-12-01\nfalse\n";
-        TaskList Archive = new TaskList();
+        TaskList TaskList = new TaskList();
         TaskItem Task = new TaskItem("Title", "Description", "3999-12-01", false);
-        Archive.Docket.add(Task);
-        assertEquals(expectedString,AmassTaskInfo(Archive.Docket.get(0)));
+        TaskList.TaskItem.add(Task);
+        assertEquals(expectedString,AmassTaskInfo(TaskList.TaskItem.get(0)));
     }
     @Test public void CreateFileDuplicate(){
-        String name = "xXNoOneShouldEverNameTheirTaskThisXx";
-        File patsy = new File(name+".txt");
+        String name = "xXNoOneShouldEverNameTheirTaskThisXx.txt";
+        File patsy = new File(name);
         CreateFile(name);               //Creates a file to block the write.
         trigger = 0;
         CreateFile(name);               //Attempts to create a duplicate.
@@ -393,47 +396,45 @@ public class App {
         assertEquals(1, trigger);
     }
     @Test public void CreateFileNewFile(){
-        //This test should be run independently, as it does not pass when run in a batch (for unknown reasons).
-        String name = "xXNoOneShouldEverNameTheirTaskThisXx";
-        File patsy = new File(name+".txt");
-        patsy.delete();                                   //Removes possible duplicate files.
+        String name = "xXNoOneShouldEverNameTheirTaskThisXx.txt";
+        File patsy = new File(name);
         CreateFile(name);
         assertTrue(patsy.delete());                     //Verifies success by deleting the file.
     }
     @Test public void GenerateCompletionKeyIncomplete(){
         int[] expectedInt = {0,2,3,4};
-        TaskList Archive = new TaskList();
+        TaskList TaskList = new TaskList();
         TaskItem Task = new TaskItem("Title", "Description", "3999-12-01", false);
-        Archive.Docket.add(Task);
+        TaskList.TaskItem.add(Task);
         Task = new TaskItem("Blank", "Nothing", "9999-09-25", true);
-        Archive.Docket.add(Task);
+        TaskList.TaskItem.add(Task);
         Task = new TaskItem("Something", "Tag", "3999-12-01", false);
-        Archive.Docket.add(Task);
+        TaskList.TaskItem.add(Task);
         Task = new TaskItem("Null", "Red", "9999-09-25", false);
-        Archive.Docket.add(Task);
+        TaskList.TaskItem.add(Task);
         Task = new TaskItem("Yes", "blue", "3999-12-01", false);
-        Archive.Docket.add(Task);
+        TaskList.TaskItem.add(Task);
         Task = new TaskItem("No", "_orange", "3030-09-11", true);
-        Archive.Docket.add(Task);
-        int[] receivedInt = GenerateCompletionKey(Archive.Docket, false);
+        TaskList.TaskItem.add(Task);
+        int[] receivedInt = GenerateCompletionKey(TaskList.TaskItem, false);
         for(int index = 0; index < receivedInt.length; index++) assertEquals(expectedInt[index],receivedInt[index]);
     }
     @Test public void GenerateCompletionKeyComplete(){
         int[] expectedInt = {1,5};
-        TaskList Archive = new TaskList();
+        TaskList TaskList = new TaskList();
         TaskItem Task = new TaskItem("Title", "Description", "3999-12-01", false);
-        Archive.Docket.add(Task);
+        TaskList.TaskItem.add(Task);
         Task = new TaskItem("Blank", "Nothing", "9999-09-25", true);
-        Archive.Docket.add(Task);
+        TaskList.TaskItem.add(Task);
         Task = new TaskItem("Something", "Tag", "3999-12-01", false);
-        Archive.Docket.add(Task);
+        TaskList.TaskItem.add(Task);
         Task = new TaskItem("Null", "Red", "9999-09-25", false);
-        Archive.Docket.add(Task);
+        TaskList.TaskItem.add(Task);
         Task = new TaskItem("Yes", "blue", "3999-12-01", false);
-        Archive.Docket.add(Task);
+        TaskList.TaskItem.add(Task);
         Task = new TaskItem("No", "_orange", "3030-09-11", true);
-        Archive.Docket.add(Task);
-        int[] receivedInt = GenerateCompletionKey(Archive.Docket, true);
+        TaskList.TaskItem.add(Task);
+        int[] receivedInt = GenerateCompletionKey(TaskList.TaskItem, true);
         for(int index = 0; index < receivedInt.length; index++) assertEquals(expectedInt[index],receivedInt[index]);
     }
     @Test public void GetInputTest(){
@@ -469,34 +470,34 @@ public class App {
         assertEquals(expectedString,AllOutput);
     }
     @Test public void PrintTasksByCompletionComplete(){
-        TaskList Archive = new TaskList();
+        TaskList TaskList = new TaskList();
         TaskItem Task = new TaskItem("Title", "Description", "3999-12-01", false);
-        Archive.Docket.add(Task);
+        TaskList.TaskItem.add(Task);
         Task = new TaskItem("Blank", "Nothing", "9999-09-25", true);
-        Archive.Docket.add(Task);
-        PrintTasksByCompletion(Archive.Docket, true);
+        TaskList.TaskItem.add(Task);
+        PrintTasksByCompletion(TaskList.TaskItem, true);
         String expectedString = "Current Complete Tasks\n" +
                 "----------------------\n\n1) [9999-09-25] Blank: Nothing\n";
         assertEquals(expectedString,AllOutput);
     }
     @Test public void PrintTasksByCompletionIncomplete(){
-        TaskList Archive = new TaskList();
+        TaskList TaskList = new TaskList();
         TaskItem Task = new TaskItem("Title", "Description", "3999-12-01", false);
-        Archive.Docket.add(Task);
+        TaskList.TaskItem.add(Task);
         Task = new TaskItem("Blank", "Nothing", "9999-09-25", true);
-        Archive.Docket.add(Task);
-        PrintTasksByCompletion(Archive.Docket, false);
+        TaskList.TaskItem.add(Task);
+        PrintTasksByCompletion(TaskList.TaskItem, false);
         String expectedString = "Current Incomplete Tasks\n" +
                 "------------------------\n\n1) [3999-12-01] Title: Description\n";
         assertEquals(expectedString,AllOutput);
     }
     @Test public void PrintAllTasksTest(){
-        TaskList Archive = new TaskList();
+        TaskList TaskList = new TaskList();
         TaskItem Task = new TaskItem("Title", "Description", "3999-12-01", false);
-        Archive.Docket.add(Task);
+        TaskList.TaskItem.add(Task);
         Task = new TaskItem("Blank", "Nothing", "9999-09-25", true);
-        Archive.Docket.add(Task);
-        PrintAllTasks(Archive.Docket);
+        TaskList.TaskItem.add(Task);
+        PrintAllTasks(TaskList.TaskItem);
         String expectedString = "Current Tasks\n" + "-------------\n" + "\n" +
                 "1) [3999-12-01] Title: Description\n" + "2) [9999-09-25] Blank: Nothing\n";
         assertEquals(expectedString,AllOutput);
