@@ -8,13 +8,12 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.IOException;
 
-
 public class App {
     public static Scanner in = new Scanner(System.in);
     public static int trigger = 0;
     public static String AllOutput = "";
     public static void main(String[] args) {
-        TaskList TaskList = null;
+        TaskList TaskList;
         int MainSelection;
         do {
             int OperationSelection = -1;
@@ -25,7 +24,7 @@ public class App {
                 TaskList = new TaskList();
                 System.out.println("A new task list has been created.\n\n");
                 OperationMenu(TaskList.TaskItem);
-                TaskList = ClearTaskList(TaskList);
+                ClearTaskList(TaskList);
             }
             if(MainSelection == 2){
                 System.out.println("Input file name (no extension required): ");
@@ -33,7 +32,7 @@ public class App {
                 TaskList = ReadFile(FileName);
                 if(trigger==1) {
                     OperationMenu(TaskList.TaskItem);
-                    TaskList = ClearTaskList(TaskList);
+                    ClearTaskList(TaskList);
                 }
             }
         } while(MainSelection != 3);
@@ -52,12 +51,21 @@ public class App {
         int index = -1;
         if(selection == 1) PrintAllTasks(TaskItem);
         if(selection == 2) {
-            TaskItem Task = selectionTwo(TaskItem);
-            TaskItem.add(Task);
+            String titleIn = "#null#", descriptionIn = "#null#", due_dateIn = "#null#";
+            trigger = 0;
+            System.out.print("Task title: ");
+            while (trigger != 1) titleIn = TitleHandler(GetInput(in));
+            trigger = 0;
+            System.out.print("Task description: ");
+            while (trigger != 1) descriptionIn = DescriptionHandler((GetInput(in)));
+            System.out.print("Task due date (YYYY-MM-DD): ");
+            trigger = 0;
+            while (trigger != 1) due_dateIn = Due_DateHandler(GetInput(in));
+            TaskItem.add(new TaskItem(titleIn, descriptionIn, due_dateIn, false));
         }
         if(selection == 3) {
             PrintAllTasks(TaskItem);
-            System.out.println("\n\nSelect a task to edit: ");
+            System.out.print("\n\nSelect a task to edit: ");
             while (index == -1) index = MenuHandler(TaskItem.size(), GetInput(in));
             trigger = 0;
             System.out.print("New Task title: ");
@@ -98,20 +106,6 @@ public class App {
             SaveTaskList(AmassListInfo(TaskItem), FileName);
         }
     }
-    private static TaskItem selectionTwo(ArrayList<TaskItem> TaskItem) {
-        String titleIn = "#null#", descriptionIn = "#null#", due_dateIn = "#null#";
-        trigger = 0;
-        System.out.print("Task title: ");
-        while (trigger != 1) titleIn = TitleHandler(GetInput(in));
-        trigger = 0;
-        System.out.print("Task description: ");
-        while (trigger != 1) descriptionIn = DescriptionHandler((GetInput(in)));
-        System.out.print("Task due date (YYYY-MM-DD): ");
-        trigger = 0;
-        while (trigger != 1) due_dateIn = Due_DateHandler(GetInput(in));
-        TaskItem Task = new TaskItem(titleIn, descriptionIn, due_dateIn, false);
-        return Task;
-    }
     private static TaskList ReadFile(String FileName){
         TaskList TaskList = new TaskList();
         String placeholder, titleIn = "#null#", descriptionIn = "#null#", due_dateIn = "#null#";
@@ -146,16 +140,15 @@ public class App {
         return TaskList;
     }
     private static void     SaveTaskList(String info, String FileName) {
-        FileWriter writer = null;
         try {
-            writer = new FileWriter(FileName);
+            FileWriter writer = new FileWriter(FileName);
             writer.write(info);
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public static String    CreateFile(String FileName){
+    private static String   CreateFile(String FileName){
         File file = new File(FileName);
         try {
             if (file.createNewFile()) {
@@ -238,7 +231,7 @@ public class App {
         }
         System.out.println(AllOutput);
     }
-    private static String   FileHandler(String input){  //Checks for blatant violations in naming.
+    private static String   FileHandler(String input){
         String[] criminals = { "/", "\n", "\r", "\t", "\0", "\f", "`", "?", "*", "<", ">", "|", ":", String.valueOf((char)34)};
         for(int index = 0; index < criminals.length; index++) {
             if (input.contains(criminals[index])){
@@ -248,13 +241,12 @@ public class App {
         }
         trigger = 1;
         return input;
-    }
+    }                                                               //Checks for blatant violations in naming.
     private static String   DescriptionHandler(String input) {
         trigger = 1;
         return input;   //Does not have error handling.
     }
     private static String   Due_DateHandler(String dateIn) {
-        int[] validDays =   {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String date = formatter.format(new Date());
         if(dateIn.length()!=10){
@@ -275,7 +267,7 @@ public class App {
         valid *= StringToIntHandler(8,10,dateIn);
         valid *= FormulaHandler(dateIn);
         valid *= PastHandler(year, yearNow, month, monthNow, day, dayNow);
-        valid *= CalendarHandler(year, month, day, validDays);
+        valid *= CalendarHandler(year, month, day);
         if(valid % 2 == 0) System.out.println("\nYour entry does not adhere to the required formula.\n");
         if(valid % 3 == 0) System.out.println("\nYour entry is in the past.\n");
         if(valid % 5 == 0) System.out.println("\nYour entry is not a valid date.\n");
@@ -294,9 +286,7 @@ public class App {
     }
     private static int      MenuHandler(int length, String selection) {
         int choice;
-        try{
-            choice = StringToInt(0, selection.length(), selection);
-        }
+        try{ choice = StringToInt(0, selection.length(), selection); }
         catch (Exception e){
             System.out.println("\nThat wasn't even a number...  Try again.\n");
             choice = -1;
@@ -326,7 +316,8 @@ public class App {
         }
         return output;
     }
-    private static int      CalendarHandler(int year, int month, int day, int[] validDays) {
+    private static int      CalendarHandler(int year, int month, int day) {
+        int[] validDays =   {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
         if(year  % 4 == 0) validDays[1] = 29;                       //February will be destroyed
         if(month > 12 || month < 1) return 5;
         if(day > validDays[month - 1]) return 5;
@@ -590,12 +581,10 @@ public class App {
         assertEquals(1899,StringToInt(0,3,"ABC"));
     }
     @Test public void CalendarHandlerValid(){
-        int[] validDays =   {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-        assertEquals(1,CalendarHandler(20244,2,29, validDays));
+        assertEquals(1,CalendarHandler(20244,2,29));
     }
     @Test public void CalendarHandlerInvalid(){
-        int[] validDays =   {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-        assertEquals(5,CalendarHandler(2021,2,29, validDays));
+        assertEquals(5,CalendarHandler(2021,2,29));
     }
     @Test public void PastHandlerValid(){
         assertEquals(1,PastHandler(2020,2020,12,11,4,25));
