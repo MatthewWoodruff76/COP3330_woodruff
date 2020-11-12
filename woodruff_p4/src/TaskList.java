@@ -1,5 +1,7 @@
+import org.junit.Test;
 import java.io.*;
 import java.util.ArrayList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TaskList {
     public static ArrayList<TaskItem> Docket = new ArrayList<TaskItem>();
@@ -7,13 +9,16 @@ public class TaskList {
     public static void addTask(String title, String description, String due_date){
         TaskList.Docket.add(new TaskItem(title,description,due_date, false));
     }
-    public static void PrintList(){
+    @Test public void PrintListTest(){
+        assertEquals("\n\n\n\n\nCurrent Tasks\n-------------\n\n",PrintList());
+    }
+    public static String PrintList(){
         String Tasks = "\n\n\n\n\nCurrent Tasks\n-------------\n\n";
         for(int index = 0; index < Docket.size();index ++) {
             Tasks += (index + 1) + ") [" + Docket.get(index).due_date + "] "
                     + Docket.get(index).title + ": " + Docket.get(index).description + "\n";
         }
-        System.out.print(Tasks);
+        return Tasks;
     }
     protected static int[]    GenerateCompletionKey(boolean complete) {
         int AmountValid = 0;
@@ -153,5 +158,8 @@ public class TaskList {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    @Test  public void ItemFormulaTest(){
+        assertEquals(1,TaskItem.FormulaHandler("2020-12-25"));
     }
 }

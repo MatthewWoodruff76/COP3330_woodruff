@@ -44,7 +44,7 @@ public class App {
         int index = 1;
         int[] key;
         if(choice == 1) {
-            TaskList.PrintList();
+            System.out.print(TaskList.PrintList());
             System.out.print("\n\nPress enter to continue.\n>");
             in.nextLine();
         }
@@ -60,7 +60,7 @@ public class App {
             TaskList.addTask(title, description, due_date);
         }
         if(choice == 3) {
-            TaskList.PrintList();
+            System.out.print(TaskList.PrintList());
             System.out.print("\n\nSelect a task to edit: ");
             do{
                 index = MenuHandler(StringToInt(in.nextLine()),TaskList.Docket.size());
@@ -77,7 +77,7 @@ public class App {
         }
         if(choice == 4) {
             screenClear();
-            TaskList.PrintList();
+            System.out.print(TaskList.PrintList());
             System.out.print("\n\nSelect a task to remove: ");
             do{
                 index = MenuHandler(StringToInt(in.nextLine()),TaskList.Docket.size());

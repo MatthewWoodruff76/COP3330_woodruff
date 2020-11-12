@@ -1,5 +1,7 @@
+import org.junit.jupiter.api.Test;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TaskItem {     //Task item is just a structure that stores information.
     public String title;
