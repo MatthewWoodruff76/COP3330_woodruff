@@ -2,32 +2,27 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class TaskList {
-    protected static ArrayList<TaskItem> List = null;
+    public static ArrayList<TaskItem> Docket = new ArrayList<TaskItem>();
     protected static String extension = ".txt";
-    public TaskList(){
-        List = new ArrayList<>();
-    }
     public static void addTask(String title, String description, String due_date){
-        List.add(new TaskItem(title,description,due_date, false));
+        TaskList.Docket.add(new TaskItem(title,description,due_date, false));
     }
     public static void PrintList(){
-        String Tasks = "Current Tasks\n-------------\n\n";
-        for(int index = 0; index < List.size();index ++) {
-            Tasks += (index + 1) + ") [" + TaskItem.due_date + "] "
-                    + TaskItem.title + ": " + TaskItem.description + "\n";
+        String Tasks = "\n\n\n\n\nCurrent Tasks\n-------------\n\n";
+        for(int index = 0; index < Docket.size();index ++) {
+            Tasks += (index + 1) + ") [" + Docket.get(index).due_date + "] "
+                    + Docket.get(index).title + ": " + Docket.get(index).description + "\n";
         }
         System.out.print(Tasks);
     }
     protected static int[]    GenerateCompletionKey(boolean complete) {
         int AmountValid = 0;
-        for (int index = 0; index < List.size(); index++) {
-            if (TaskItem.complete == complete) AmountValid++;
+        for (int index = 0; index < Docket.size(); index++) {
+            if (Docket.get(index).complete == complete) AmountValid++;
         }
         int[] key = new int[AmountValid];
-        int position = 0;
-        for (int index = 0; index < List.size(); index++) {
-            List.get(1).ValidDue_Date();
-            if (TaskItem.complete == complete) {
+        for (int index = 0, position = 0; index < Docket.size(); index++) {
+            if (Docket.get(index).complete == complete) {
                 key[position] = index;
                 position++;
             }
@@ -35,14 +30,20 @@ public class TaskList {
         return key;
     }
     public static void PrintPartialTasks(boolean complete){
-        String Prefix = "inc", Tasks = "Current Complete Tasks\n----------------------\n\n";
-        for(int index = 0; index < List.size();index ++) {
-            if(TaskItem.complete == complete) {
-                Tasks += (index + 1) + ") [" + TaskItem.due_date + "] "
-                        + TaskItem.title + ": " + TaskItem.description + "\n";
+        String Prefix = "in", Tasks = "Current Complete Tasks\n----------------------\n\n";
+        int position = 1;
+        for(int index = 0; index < Docket.size();index ++) {
+            if(Docket.get(index).complete == complete) {
+                Tasks += (position) + ") [" + Docket.get(index).due_date + "] "
+                        + Docket.get(index).title + ": " + Docket.get(index).description + "\n";
+                position++;
             }
         }
         System.out.println(Tasks);
+        if(position == 1){
+            System.out.print("\n\nThere are no " + Prefix + "complete tasks.");
+            return;
+        }
         if(complete) Prefix = "";
         System.out.println("\n\nSelect a task to mark " + Prefix + "complete: ");
     }
@@ -51,19 +52,28 @@ public class TaskList {
         boolean validTitle = TaskItem.TitleHandler(title);
         return validDate && validTitle;
     }
-    public static void editVisibleTask(String title, String description, String due_date){
-        TaskItem.title = title;
-        TaskItem.description = description;
-        TaskItem.due_date = due_date;
+    public static void editVisibleTask(String title, String description, String due_date, int index){
+        Docket.get(index).title = title;
+        Docket.get(index).description = description;
+        Docket.get(index).due_date = due_date;
     }
     public static void removeTask(int index){
-        List.remove(index);
+        Docket.remove(index);
     }
 
     protected static void editInvisibleTask(int index, boolean complete){
-        TaskItem.complete = complete;
+        Docket.get(index).complete = complete;
     }
-
+    protected static boolean ReadProtection(String FileName){
+        try {
+            new BufferedReader(new FileReader(FileName));
+        } catch (IOException e) {
+            System.out.println("\nThe file could not be found.\n");
+            return false;
+        }
+        System.out.println("\nThe file was found.\n");
+        return true;
+    }
     protected static BufferedReader ReadFile(String FileName){
         BufferedReader input = null;
         try {
@@ -76,7 +86,7 @@ public class TaskList {
     }
 
     protected static void LoadFile(BufferedReader input){
-        int tally = 0, index = 0;
+        int tally = 0;
         String placeholder = "", title = "#null#", description = "#null#", due_date = "#null#";
         do {
             try {
@@ -89,10 +99,7 @@ public class TaskList {
             if((tally + 2) % 4 == 0) due_date = placeholder;
             if((tally + 1) % 4 == 0) {
                 TaskItem Task = new TaskItem(title, description, due_date, Boolean.parseBoolean(placeholder));
-                editVisibleTask(title, description, due_date);
-                editInvisibleTask(index, Boolean.parseBoolean(placeholder));
-                List.add(Task);
-                index++;
+                Docket.add(Task);
             }
             tally++;
         } while(true);
@@ -100,7 +107,7 @@ public class TaskList {
 
     public static void PrintSavePrompt() {
         System.out.print("\n\nYou have chosen to save your progress.\n" +
-                "After saving, you can close the task list with 8, or continue modifying it.\n" +
+                "After saving, you can close the task Docket with 8, or continue modifying it.\n" +
                 "Output file name (no extension required): ");
     }
     protected static void   CreateFile(String FileName){
@@ -128,15 +135,15 @@ public class TaskList {
         return input;
     }
     protected static String   AmassListInfo() {
-        String ListInfo = "";                                           //Empty opening statement.
-        for(int index = 0; index < List.size(); index++){
-            ListInfo += AmassTaskInfo();
+        String DocketInfo = "";                                           //Empty opening statement.
+        for(int index = 0; index < Docket.size(); index++){
+            DocketInfo += AmassTaskInfo(index);
         }
-        return ListInfo;
+        return DocketInfo;
     }
-    protected static String   AmassTaskInfo() {
-        return  TaskItem.title + "\n" + TaskItem.description + "\n"
-                + TaskItem.due_date + "\n" + TaskItem.complete + "\n" ;
+    protected static String   AmassTaskInfo(int index) {
+        return  Docket.get(index).title + "\n" + Docket.get(index).description + "\n"
+                + Docket.get(index).due_date + "\n" + Docket.get(index).complete + "\n" ;
     }
     protected static void     SaveTaskList(String info, String FileName) {
         try {

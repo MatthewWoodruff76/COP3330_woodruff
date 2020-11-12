@@ -5,10 +5,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TaskItem {     //Task item is just a structure that stores information.
 
-    protected static String title           =   "Blank";
-    protected static String description     =   "No";
-    protected static String due_date        =   "0000-00-00";   //YYYY-MM-DD
-    protected static boolean complete       =   false;              //Status is 1 if complete, 0 if incomplete.
+    public String title           =   "Blank";
+    protected String description     =   "No";
+    protected String due_date        =   "0000-00-00";   //YYYY-MM-DD
+    protected boolean complete       =   false;              //Status is 1 if complete, 0 if incomplete.
 
     public TaskItem(String titleIn, String descriptionIn, String due_dateIn, boolean completeIN){
         title           =   titleIn;
