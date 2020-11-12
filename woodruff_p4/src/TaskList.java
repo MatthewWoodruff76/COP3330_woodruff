@@ -48,7 +48,7 @@ public class TaskList {
         System.out.println("\n\nSelect a task to mark " + Prefix + "complete: ");
     }
     public static boolean ValidateTask(String title, String due_date){
-        boolean validDate = TaskItem.TitleMistakesReport(TaskItem.Due_DateHandler(due_date));
+        boolean validDate = TaskItem.Due_DateReport(TaskItem.Due_DateHandler(due_date));
         boolean validTitle = TaskItem.TitleHandler(title);
         return validDate && validTitle;
     }

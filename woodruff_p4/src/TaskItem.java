@@ -1,29 +1,19 @@
-import org.junit.Test;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class TaskItem {     //Task item is just a structure that stores information.
-
-    public String title           =   "Blank";
-    protected String description     =   "No";
-    protected String due_date        =   "0000-00-00";   //YYYY-MM-DD
-    protected boolean complete       =   false;              //Status is 1 if complete, 0 if incomplete.
-
+    public String title;
+    protected String description;
+    protected String due_date;
+    protected boolean complete;
     public TaskItem(String titleIn, String descriptionIn, String due_dateIn, boolean completeIN){
         title           =   titleIn;
         description     =   descriptionIn;
         due_date        =   due_dateIn;
         complete        =   completeIN;
     }
-    @Test public void InvalidDue_Date(){
-        assertEquals(210, Due_DateHandler("2020*02-300"));
-    }
-    @Test public void ValidDue_Date(){
-        assertEquals(1, Due_DateHandler("3000-02-29"));
-    }
     //Prints off issues with due_date
-    protected static boolean TitleMistakesReport(int mistakes) {
+    protected static boolean Due_DateReport(int mistakes) {
         if(mistakes % 5 == 0) System.out.println("\nYour entry does not adhere to the required formula.\n");
         if(mistakes % 2 == 0) System.out.println("\nYour entry is in the past.\n");
         if(mistakes % 3 == 0) System.out.println("\nYour entry is not a valid date.\n");
@@ -32,7 +22,7 @@ public class TaskItem {     //Task item is just a structure that stores informat
         return false;
     }
     //Produces a scorecard based on errors present in the due date.
-    protected static int Due_DateHandler(String due_dateIn){
+    public static int Due_DateHandler(String due_dateIn){
         int mistakes, year, yearNow, month, monthNow, day, dayNow;
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String current_date = formatter.format(new Date());
@@ -83,15 +73,5 @@ public class TaskItem {     //Task item is just a structure that stores informat
         if (input.length() != 10)   mistake2 = 7;                           //Checks for length issues.
         return mistake1*mistake2;
     }
-    @Test public void ValidTitleValid(){
-        String titleIn = "ValidName";
-        assertTrue(TitleHandler(titleIn));
-    }
-    @Test public void InvalidTitleValid(){
-        String titleIn = "";
-        assertFalse(TitleHandler(titleIn));
-    }
-
-
 }
 
