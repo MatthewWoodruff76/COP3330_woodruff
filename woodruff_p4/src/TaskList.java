@@ -2,14 +2,14 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class TaskList {
-    public static ArrayList<TaskItem> List = new ArrayList<>();
+    protected static ArrayList<TaskItem> List = new ArrayList<>();
     protected static String extension = ".txt";
 
-    public static void addTask(String title, String description, String due_date){
+    protected static void addTask(String title, String description, String due_date){
         TaskList.List.add(new TaskItem(title,description,due_date, false));
     }
 
-    public static String PrintableList(){
+    protected static String PrintableList(){
         String Tasks = "\n\n\n\n\nCurrent Tasks\n-------------\n\n";
         for(int index = 0; index < List.size();index ++) {
             Tasks += (index + 1) + ") [" + List.get(index).due_date + "] "
@@ -31,7 +31,7 @@ public class TaskList {
         }
         return key;
     }
-    public static String PartialTasks(boolean complete){
+    protected static String PartialTasks(boolean complete){
         String Prefix = "", Tasks = "Current Complete Tasks\n----------------------\n\n";
         int position = 1;
         for(int index = 0; index < List.size();index ++) {
@@ -47,18 +47,18 @@ public class TaskList {
         if(!complete) Prefix = "in";
         return Tasks + "\n\nSelect a task to mark " + Prefix + "complete: ";
     }
-    public static boolean ValidateTask(String title, String due_date, String description){
+    protected static boolean ValidateTask(String title, String due_date, String description){
         boolean validDate = TaskItem.Due_DateReport(TaskItem.Due_DateHandler(due_date));
         boolean validTitle = TaskItem.TitleHandler(title);
         boolean validDescription = TaskItem.DescriptionHandler(description);
         return validDate && validTitle && validDescription;
     }
-    public static void editVisibleTask(String title, String description, String due_date, int index){
+    protected static void editVisibleTask(String title, String description, String due_date, int index){
         List.get(index).title = title;
         List.get(index).description = description;
         List.get(index).due_date = due_date;
     }
-    public static void removeTask(int index){
+    protected static void removeTask(int index){
         List.remove(index);
     }
 
@@ -86,7 +86,6 @@ public class TaskList {
         System.out.println("\nThe list was found.\n");
         return input;
     }
-
     protected static void LoadFile(BufferedReader input){
         int tally = 0;
         String placeholder = "", title = "#null#", description = "#null#", due_date = "#null#";
@@ -106,8 +105,7 @@ public class TaskList {
             tally++;
         } while(true);
     }
-
-    public static void PrintSavePrompt() {
+    protected static void PrintSavePrompt() {
         System.out.print("\n\nYou have chosen to save your progress.\n" +
                 "After saving, you can close the task List with 8, or continue modifying it.\n" +
                 "Output file name (no extension required): ");

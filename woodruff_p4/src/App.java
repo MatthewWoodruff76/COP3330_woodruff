@@ -37,7 +37,7 @@ public class App {
             }
         } while (selection != 3);
     }
-    private static void OpsAction(int choice) {
+    protected static void OpsAction(int choice) {
         String title, description, due_date;
         int index;
         int[] key;
@@ -107,10 +107,10 @@ public class App {
             ClearTaskList();
         }
     }
-    private static void ClearTaskList() {
+    protected static void ClearTaskList() {
         for(int index = TaskList.List.size() - 1; index >= 0; index --) TaskList.List.remove(index);
     }
-    private static String     OpsMenu() {
+    protected static String     OpsMenu() {
         return "\n\nList Operation Menu\n" +
                 "---------\n\n" +
                 "1) view the list\n" +
@@ -122,7 +122,7 @@ public class App {
                 "7) save the current list\n" +
                 "8) quit to the main menu\n\nEnter your selection: ";
     }
-    private static String    MainMenu() {
+    protected static String    MainMenu() {
         screenClear();
         return "\n\nMain Menu\n---------\n\n" +
                 "1) create a new list\n" +
@@ -142,7 +142,7 @@ public class App {
             number += digit;
         return number;
     }
-    private static void screenClear(){
+    protected static void screenClear(){
         System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     }
 }

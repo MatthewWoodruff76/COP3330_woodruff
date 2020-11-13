@@ -2,11 +2,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TaskItem {     //Task item is just a structure that stores information.
-    public String title;
+    protected String title;
     protected String description;
     protected String due_date;
     protected boolean complete;
-    public TaskItem(String titleIn, String descriptionIn, String due_dateIn, boolean completeIN){
+    protected TaskItem(String titleIn, String descriptionIn, String due_dateIn, boolean completeIN){
         title           =   titleIn;
         description     =   descriptionIn;
         due_date        =   due_dateIn;
@@ -22,7 +22,7 @@ public class TaskItem {     //Task item is just a structure that stores informat
     }
 
     //Produces a scorecard based on errors present in the due date.
-    public static int Due_DateHandler(String due_dateIn){
+    protected static int Due_DateHandler(String due_dateIn){
         int mistakes, year, yearNow, month, monthNow, day, dayNow;
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String current_date = formatter.format(new Date());

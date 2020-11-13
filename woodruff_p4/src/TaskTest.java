@@ -1,14 +1,9 @@
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TaskTest {
 
-
-
-    //TaskItem tests
-
-    //Errors are handled by the user, not the program.
     //The program provides exact details for fixing issues and blocks inputs until errors are cleared.
 
     @Test
@@ -18,17 +13,17 @@ public class TaskTest {
         assertEquals("title",Task.title);
         assertEquals("description",Task.description);
         assertEquals("YYYY-MM-DD",Task.due_date);
-        assertEquals(false,Task.complete);
+        assertFalse(Task.complete);
     }   //Confirms reality
     @Test
     public void
     inputTaskItemInvalidDueDate() {
         assertEquals(210,TaskItem.Due_DateHandler("1776-02*300"));
-        assertEquals(false,TaskItem.Due_DateReport(210));
+        assertFalse(TaskItem.Due_DateReport(210));
     }   //The first test tests all subclasses of Due_DateHandler.
     @Test public void
     inputTaskItemInvalidTitle() {
-        assertEquals(false,TaskItem.TitleHandler(""));
+        assertFalse(TaskItem.TitleHandler(""));
     }
     @Test public void
     inputTaskItemValidDueDate() {
@@ -36,18 +31,15 @@ public class TaskTest {
     }
     @Test public void
     inputTaskItemValidTitle() {
-        assertEquals(true,TaskItem.TitleHandler("Title"));
+        assertTrue(TaskItem.TitleHandler("Title"));
     }
     @Test public void
     inputTaskItemDescription() {
-        assertEquals(true,TaskItem.DescriptionHandler("Anything"));
+        assertTrue(TaskItem.DescriptionHandler("Anything"));
     }
-
-
-    //TaskList tests
-
     @Test public void
     addingTaskItem() {
+        App.ClearTaskList();
         int before = TaskList.List.size();
         TaskList.addTask("title","description","YYYY-MM-DD");
         int after = TaskList.List.size();
@@ -55,12 +47,14 @@ public class TaskTest {
     }
     @Test public void
     completingTaskItemChangesStatus() {
+        App.ClearTaskList();
         TaskList.addTask("title","description","YYYY-MM-DD");
         TaskList.editInvisibleTask(0,true);
-        assertEquals(true,TaskList.List.get(0).complete);
+        assertTrue(TaskList.List.get(0).complete);
     }
     @Test public void
     completingIndexKeyValidation() {
+        App.ClearTaskList();
         TaskList.addTask("title","description","YYYY-MM-DD");
         TaskList.editInvisibleTask(0,true);
         TaskList.addTask("title","description","YYYY-MM-DD");
@@ -73,13 +67,11 @@ public class TaskTest {
     }
     @Test public void
     completingListPrintsValidation() {
+        App.ClearTaskList();
         String expectedString = "Current Complete Tasks\n" +
-                "----------------------\n" +
-                "\n" +
+                "----------------------\n\n" +
                 "1) [YYYY-MM-DD] title: description\n" +
-                "2) [YYYY-MM-DD] title: description\n" +
-                "\n" +
-                "\n" +
+                "2) [YYYY-MM-DD] title: description\n\n\n" +
                 "Select a task to mark complete: ";
         TaskList.addTask("title","description","YYYY-MM-DD");
         TaskList.editInvisibleTask(0,true);
@@ -91,6 +83,7 @@ public class TaskTest {
     }
     @Test public void
     editingTaskItemChangesValues() {
+        App.ClearTaskList();
         TaskItem ExpectedTask = new TaskItem("No","Nope","5050-05-05", false);
         TaskList.addTask("title","description","YYYY-MM-DD");
         TaskList.addTask("title","description","YYYY-MM-DD");
@@ -119,51 +112,39 @@ public class TaskTest {
         assertEquals(1,App.StringToInt("000000001"));
     }   //Leading zeroes are ignored out of courtesy.
     @Test public void
-    gettingTaskItemDescriptionInvalidIndex() {
-
-    }
-    @Test public void
-    gettingTaskItemDescriptionValidIndex() {
-
-    }
-    @Test public void
-    gettingTaskItemDueDateInvalidIndex() {
-
-    }
-    @Test public void
-    gettingTaskItemDueDateValidIndex() {
-
-    }
-    @Test public void
-    gettingTaskItemTitleInvalidIndex() {
-
-    }
-    @Test public void
-    gettingTaskItemTitleValidIndex() {
-
-    }
-    @Test public void
-    newTaskListIsEmpty() {
-
+    testClearTaskList() {
+        App.ClearTaskList();
+        TaskList.addTask("title","description","YYYY-MM-DD");
+        TaskList.addTask("title","description","YYYY-MM-DD");
+        TaskList.addTask("title","description","YYYY-MM-DD");
+        TaskList.addTask("title","description","YYYY-MM-DD");
+        assertEquals(4,TaskList.List.size());
+        App.ClearTaskList();
+        assertEquals(0,TaskList.List.size());
     }
     @Test public void
     removingTaskItemsDecreasesSize() {
-
-    }
-    @Test public void
-    removingTaskItemsInvalidIndex() {
-
-    }
+        App.ClearTaskList();
+        TaskList.addTask("title","description","YYYY-MM-DD");
+        TaskList.addTask("title","description","YYYY-MM-DD");
+        TaskList.addTask("title","description","YYYY-MM-DD");
+        TaskList.addTask("title","description","YYYY-MM-DD");
+        assertEquals(4,TaskList.List.size());
+        TaskList.removeTask(2);
+        assertEquals(3,TaskList.List.size());
+    }   //It is not necessary to test invalid indexes, as separate functions handle such errors.
     @Test public void
     savedTaskListCanBeLoaded() {
-    }
-
-    @Test public void
-    uncompletingTaskItemChangesStatus() {
-
-    }
-    @Test public void
-    uncompletingTaskItemInvalidIndex() {
-
+        App.ClearTaskList();
+        String expectedTitle = "No", expectedDescription = "Nope", expectedDue_Date = "5050-05-05";
+        TaskList.addTask("No","Nope","5050-05-05");
+        String FileName = TaskList.ValidateFileName("TestFile") + TaskList.extension;
+        TaskList.CreateFile(FileName);
+        TaskList.SaveTaskList(TaskList.AmassListInfo(), FileName);
+        String input = TaskList.ValidateFileName("TestFile" + TaskList.extension);
+        TaskList.LoadFile(TaskList.ReadFile(input));
+        assertEquals(expectedTitle,TaskList.List.get(1).title);
+        assertEquals(expectedDescription,TaskList.List.get(1).description);
+        assertEquals(expectedDue_Date,TaskList.List.get(1).due_date);
     }
 }
