@@ -1,74 +1,71 @@
-import org.junit.Test;
 import java.io.*;
 import java.util.ArrayList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TaskList {
-    public static ArrayList<TaskItem> Docket = new ArrayList<TaskItem>();
+    public static ArrayList<TaskItem> List = new ArrayList<>();
     protected static String extension = ".txt";
+
     public static void addTask(String title, String description, String due_date){
-        TaskList.Docket.add(new TaskItem(title,description,due_date, false));
+        TaskList.List.add(new TaskItem(title,description,due_date, false));
     }
-    @Test public void PrintListTest(){
-        assertEquals("\n\n\n\n\nCurrent Tasks\n-------------\n\n",PrintList());
-    }
-    public static String PrintList(){
+
+    public static String PrintableList(){
         String Tasks = "\n\n\n\n\nCurrent Tasks\n-------------\n\n";
-        for(int index = 0; index < Docket.size();index ++) {
-            Tasks += (index + 1) + ") [" + Docket.get(index).due_date + "] "
-                    + Docket.get(index).title + ": " + Docket.get(index).description + "\n";
+        for(int index = 0; index < List.size();index ++) {
+            Tasks += (index + 1) + ") [" + List.get(index).due_date + "] "
+                    + List.get(index).title + ": " + List.get(index).description + "\n";
         }
         return Tasks;
     }
     protected static int[]    GenerateCompletionKey(boolean complete) {
         int AmountValid = 0;
-        for (int index = 0; index < Docket.size(); index++) {
-            if (Docket.get(index).complete == complete) AmountValid++;
+        for (int index = 0; index < List.size(); index++) {
+            if (List.get(index).complete == complete) AmountValid++;
         }
         int[] key = new int[AmountValid];
-        for (int index = 0, position = 0; index < Docket.size(); index++) {
-            if (Docket.get(index).complete == complete) {
+        for (int index = 0, position = 0; index < List.size(); index++) {
+            if (List.get(index).complete == complete) {
                 key[position] = index;
                 position++;
             }
         }
         return key;
     }
-    public static void PrintPartialTasks(boolean complete){
-        String Prefix = "in", Tasks = "Current Complete Tasks\n----------------------\n\n";
+    public static String PartialTasks(boolean complete){
+        String Prefix = "", Tasks = "Current Complete Tasks\n----------------------\n\n";
         int position = 1;
-        for(int index = 0; index < Docket.size();index ++) {
-            if(Docket.get(index).complete == complete) {
-                Tasks += (position) + ") [" + Docket.get(index).due_date + "] "
-                        + Docket.get(index).title + ": " + Docket.get(index).description + "\n";
+        for(int index = 0; index < List.size();index ++) {
+            if(List.get(index).complete == complete) {
+                Tasks += (position) + ") [" + List.get(index).due_date + "] "
+                        + List.get(index).title + ": " + List.get(index).description + "\n";
                 position++;
             }
         }
-        System.out.println(Tasks);
         if(position == 1){
-            System.out.print("\n\nThere are no " + Prefix + "complete tasks.");
-            return;
+            return Tasks + "\n\nThere are no " + Prefix + "complete tasks.";
         }
-        if(complete) Prefix = "";
-        System.out.println("\n\nSelect a task to mark " + Prefix + "complete: ");
+        if(!complete) Prefix = "in";
+        return Tasks + "\n\nSelect a task to mark " + Prefix + "complete: ";
     }
-    public static boolean ValidateTask(String title, String due_date){
+    public static boolean ValidateTask(String title, String due_date, String description){
         boolean validDate = TaskItem.Due_DateReport(TaskItem.Due_DateHandler(due_date));
         boolean validTitle = TaskItem.TitleHandler(title);
-        return validDate && validTitle;
+        boolean validDescription = TaskItem.DescriptionHandler(description);
+        return validDate && validTitle && validDescription;
     }
     public static void editVisibleTask(String title, String description, String due_date, int index){
-        Docket.get(index).title = title;
-        Docket.get(index).description = description;
-        Docket.get(index).due_date = due_date;
+        List.get(index).title = title;
+        List.get(index).description = description;
+        List.get(index).due_date = due_date;
     }
     public static void removeTask(int index){
-        Docket.remove(index);
+        List.remove(index);
     }
 
     protected static void editInvisibleTask(int index, boolean complete){
-        Docket.get(index).complete = complete;
+        List.get(index).complete = complete;
     }
+
     protected static boolean ReadProtection(String FileName){
         try {
             new BufferedReader(new FileReader(FileName));
@@ -104,7 +101,7 @@ public class TaskList {
             if((tally + 2) % 4 == 0) due_date = placeholder;
             if((tally + 1) % 4 == 0) {
                 TaskItem Task = new TaskItem(title, description, due_date, Boolean.parseBoolean(placeholder));
-                Docket.add(Task);
+                List.add(Task);
             }
             tally++;
         } while(true);
@@ -112,7 +109,7 @@ public class TaskList {
 
     public static void PrintSavePrompt() {
         System.out.print("\n\nYou have chosen to save your progress.\n" +
-                "After saving, you can close the task Docket with 8, or continue modifying it.\n" +
+                "After saving, you can close the task List with 8, or continue modifying it.\n" +
                 "Output file name (no extension required): ");
     }
     protected static void   CreateFile(String FileName){
@@ -140,15 +137,15 @@ public class TaskList {
         return input;
     }
     protected static String   AmassListInfo() {
-        String DocketInfo = "";                                           //Empty opening statement.
-        for(int index = 0; index < Docket.size(); index++){
-            DocketInfo += AmassTaskInfo(index);
+        String ListInfo = "";                                           //Empty opening statement.
+        for(int index = 0; index < List.size(); index++){
+            ListInfo += AmassTaskInfo(index);
         }
-        return DocketInfo;
+        return ListInfo;
     }
     protected static String   AmassTaskInfo(int index) {
-        return  Docket.get(index).title + "\n" + Docket.get(index).description + "\n"
-                + Docket.get(index).due_date + "\n" + Docket.get(index).complete + "\n" ;
+        return  List.get(index).title + "\n" + List.get(index).description + "\n"
+                + List.get(index).due_date + "\n" + List.get(index).complete + "\n" ;
     }
     protected static void     SaveTaskList(String info, String FileName) {
         try {
@@ -158,8 +155,5 @@ public class TaskList {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-    @Test  public void ItemFormulaTest(){
-        assertEquals(1,TaskItem.FormulaHandler("2020-12-25"));
     }
 }

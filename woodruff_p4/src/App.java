@@ -5,7 +5,6 @@ public class App {
     public static void main(String[] args) {
         int selection,choice;
         String input;
-        TaskList List = null;
         do {
             Scanner in = new Scanner(System.in);
             do {
@@ -14,7 +13,6 @@ public class App {
                 screenClear();
             } while(selection == -1);
             if (selection == 1) {
-                List = new TaskList();
                 System.out.print("\nA new task has been created.\n");
             }
             if (selection == 2) {
@@ -34,17 +32,17 @@ public class App {
                         System.out.print(OpsMenu());
                         choice = MenuHandler(StringToInt(in.nextLine()), 8);
                     } while (choice == -1);
-                    OpsAction(choice,List);
+                    OpsAction(choice);
                 } while (choice != 8);
             }
         } while (selection != 3);
     }
-    private static void OpsAction(int choice, TaskList List) {
+    private static void OpsAction(int choice) {
         String title, description, due_date;
-        int index = 1;
+        int index;
         int[] key;
         if(choice == 1) {
-            System.out.print(TaskList.PrintList());
+            System.out.print(TaskList.PrintableList());
             System.out.print("\n\nPress enter to continue.\n>");
             in.nextLine();
         }
@@ -56,14 +54,14 @@ public class App {
                 description = in.nextLine();
                 System.out.print("\nTask due date (YYYY-MM-DD): ");
                 due_date = in.nextLine();
-            } while (!TaskList.ValidateTask(title, due_date));
+            } while (!TaskList.ValidateTask(title, due_date, description));
             TaskList.addTask(title, description, due_date);
         }
         if(choice == 3) {
-            System.out.print(TaskList.PrintList());
+            System.out.print(TaskList.PrintableList());
             System.out.print("\n\nSelect a task to edit: ");
             do{
-                index = MenuHandler(StringToInt(in.nextLine()),TaskList.Docket.size());
+                index = MenuHandler(StringToInt(in.nextLine()),TaskList.List.size());
             } while (index == -1);
             do{
                 System.out.print("\nTask title: ");
@@ -72,15 +70,15 @@ public class App {
                 description = in.nextLine();
                 System.out.print("\nTask due date (YYYY-MM-DD): ");
                 due_date = in.nextLine();
-            } while (!TaskList.ValidateTask(title, due_date));
+            } while (!TaskList.ValidateTask(title, due_date, description));
             TaskList.editVisibleTask(title, description, due_date, index);
         }
         if(choice == 4) {
             screenClear();
-            System.out.print(TaskList.PrintList());
+            System.out.print(TaskList.PrintableList());
             System.out.print("\n\nSelect a task to remove: ");
             do{
-                index = MenuHandler(StringToInt(in.nextLine()),TaskList.Docket.size());
+                index = MenuHandler(StringToInt(in.nextLine()),TaskList.List.size());
             } while(index == -1);
             TaskList.removeTask(index);
         }
@@ -88,7 +86,7 @@ public class App {
             screenClear();
             boolean complete = false;
             if(choice == 6) complete = true;
-            TaskList.PrintPartialTasks(complete);
+            System.out.print(TaskList.PartialTasks(complete));
             key = TaskList.GenerateCompletionKey(complete);
             if(key.length > 0) {
                 do {
@@ -105,6 +103,12 @@ public class App {
             TaskList.CreateFile(FileName);
             TaskList.SaveTaskList(TaskList.AmassListInfo(), FileName);
         }
+        if(choice == 8) {
+            ClearTaskList();
+        }
+    }
+    private static void ClearTaskList() {
+        for(int index = TaskList.List.size() - 1; index >= 0; index --) TaskList.List.remove(index);
     }
     private static String     OpsMenu() {
         return "\n\nList Operation Menu\n" +
@@ -125,20 +129,20 @@ public class App {
                 "2) load an existing list\n" +
                 "3) quit\n\nEnter your selection: ";
     }
-    private static int      MenuHandler(int choice, int length) {
+    protected static int      MenuHandler(int choice, int length) {
         if (choice <= length && choice > 0) return choice;
         System.out.print("\nThat was not a listed option. Try again.\n");
         return -1;
     }
-    private static int StringToInt(String string){
-        int number = 0;
+    protected static int StringToInt(String string){
+        int number = 0, digit = 0;
         for(int index = 0; index < string.length(); index++)
-            number += string.charAt(index)-48;
+            digit = string.charAt(index) - 48;
+            if(digit > 9 || digit < 0) return 0;
+            number += digit;
         return number;
     }
-
     private static void screenClear(){
         System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     }
-
 }

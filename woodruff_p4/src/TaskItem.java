@@ -1,7 +1,5 @@
-import org.junit.jupiter.api.Test;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class TaskItem {     //Task item is just a structure that stores information.
     public String title;
@@ -20,9 +18,9 @@ public class TaskItem {     //Task item is just a structure that stores informat
         if(mistakes % 2 == 0) System.out.println("\nYour entry is in the past.\n");
         if(mistakes % 3 == 0) System.out.println("\nYour entry is not a valid date.\n");
         if(mistakes % 7 == 0) System.out.println("\nYour entry is not the right length.\n");
-        if(mistakes == 1) return true;
-        return false;
+        return mistakes == 1;
     }
+
     //Produces a scorecard based on errors present in the due date.
     public static int Due_DateHandler(String due_dateIn){
         int mistakes, year, yearNow, month, monthNow, day, dayNow;
@@ -39,11 +37,16 @@ public class TaskItem {     //Task item is just a structure that stores informat
         mistakes *= FormulaHandler(due_dateIn);
         return mistakes;
     }
+    protected static boolean DescriptionHandler(String description){
+        return true;
+    }
     //Verifies the title has at least one character.
     protected static boolean TitleHandler(String titleIn) {
-        if(titleIn.length()==0) System.out.println("\nAt least one character is required.\n");
-        else return true;
-        return false;
+        if(titleIn.length()==0) {
+            System.out.println("\nAt least one character is required.\n");
+            return false;
+        }
+        return true;
     }
     //Isolates a section of the input string and converts it to integer values.
     protected static int IsolateUnit(int start, int end, String Date) {
