@@ -4,7 +4,6 @@ public class App {
     static Scanner in = new Scanner(System.in);
     public static void main(String[] args) {
         int selection,choice;
-        String input;
         do {
             Scanner in = new Scanner(System.in);
             do {
@@ -16,7 +15,7 @@ public class App {
                 System.out.print("\nA new task has been created.\n");   //Placebo.
             }
             if (selection == 2) {
-                String FileName = "";
+                String FileName;
                 do {
                     do{
                         System.out.print("\nEnter file name (no extension): ");
@@ -104,7 +103,7 @@ public class App {
         if(choice == 7) {
             screenClear();
             TaskList.PrintSavePrompt();
-            String FileName = "";
+            String FileName;
             do{
                 System.out.print("\nEnter file name (no extension): ");
                 FileName = in.nextLine() + TaskList.extension;
@@ -141,7 +140,7 @@ public class App {
         return -1;
     }
     protected static int StringToInt(String string){
-        int number = 0, digit = 0;
+        int number = 0, digit;
         for(int index = 0; index < string.length(); index++){
             digit = string.charAt(index) - 48;
             if(digit > 9 || digit < 0) return 0;

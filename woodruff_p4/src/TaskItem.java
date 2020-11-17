@@ -54,7 +54,7 @@ public class TaskItem {
         }
         return output;
     }    //Isolates a section of the input string and converts it to integer values.
-    protected String   AmassTaskInfo() {
+    protected String AmassTaskInfo() {
         return  title + "\n" + description + "\n"
                 + due_date + "\n" + complete + "\n" ;
     }   //Assembles a string of task information for saving in a file.

@@ -1,4 +1,5 @@
 import org.junit.jupiter.api.Test;
+import java.io.File;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TaskTest {
@@ -112,9 +113,29 @@ public class TaskTest {
         String expectedString = "\n\nThere are no complete tasks.";
         assertEquals(expectedString,TaskList.PartialTasks(true));
     }   //Tests the full task list printout.
-    
-
-
+    @Test public void
+    validateTasksTestValid() {
+        assertTrue(TaskList.ValidateTask("title", "2050-12-29"));
+    }   //Verifies that valid tasks are passed.
+    @Test public void
+    validateTasksTestInvalid() {
+        assertFalse(TaskList.ValidateTask("", "2050-12-29"));
+    }   //Verifies that invalid tasks are rejected.
+    @Test public void
+    editingTaskTest() {
+        TaskList.ClearTaskList();
+        TaskList.addTask("title","description","YYYY-MM-DD");
+        TaskList.editTask("NewTitle", "NewDescription", "2050-12-29",0);
+        String expectedString = "NewTitle\nNewDescription\n2050-12-29\nfalse\n";
+        assertEquals(expectedString,TaskList.List.get(0).AmassTaskInfo());
+    }   //Verifies that editing a task applies the new fields.
+    @Test public void
+    removingTaskTest() {
+        TaskList.ClearTaskList();
+        TaskList.addTask("title","description","YYYY-MM-DD");
+        TaskList.removeTask(0);
+        assertEquals(0,TaskList.List.size());
+    }   //Verifies that removing a test removes the test.
     @Test public void
     completingTaskItemChangesStatus() {
         TaskList.ClearTaskList();
@@ -122,36 +143,79 @@ public class TaskTest {
         TaskList.editCompletionStatus(0,true);
         assertTrue(TaskList.List.get(0).complete);
     }   //Verifies that the function for editing status works.
-
     @Test public void
-    completingListPrintsValidation() {
-        TaskList.ClearTaskList();
-        String expectedString = "Current Complete Tasks\n" +
-                "----------------------\n\n" +
-                "1) [YYYY-MM-DD] title: description\n" +
-                "2) [YYYY-MM-DD] title: description\n\n\n" +
-                "Select a task to mark complete: ";
-        TaskList.addTask("title","description","YYYY-MM-DD");
-        TaskList.editCompletionStatus(0,true);
-        TaskList.addTask("title","description","YYYY-MM-DD");
-        TaskList.addTask("title","description","YYYY-MM-DD");
-        TaskList.addTask("title","description","YYYY-MM-DD");
-        TaskList.editCompletionStatus(3,true);
-        assertEquals(expectedString,TaskList.PartialTasks(true));
-    }   //Verifies the print system recognizes status.
+    invalidReadProtectionTest() {
+        String FileName = "\\\2.2.2.2ThisIsNotPossible";
+        assertFalse(TaskList.ReadProtection(FileName));
+    }   //Verifies that files must be found to be read.
     @Test public void
-    editingTaskItemChangesValues() {
+    validReadProtectionTest() {
+        String FileName = "Test.txt";
+        TaskList.CreateFile(FileName);
+        assertTrue(TaskList.ReadProtection(FileName));
+    }   //Verifies that files which exist are passed.
+    @Test public void
+    validReadFile() {
+        String FileName = "Test.txt";
         TaskList.ClearTaskList();
-        TaskItem ExpectedTask = new TaskItem("No","Nope","5050-05-05", false);
+        TaskList.addTask("title","description","YYYY-MM-DD");
+        TaskList.CreateFile(FileName);
+        assertNotNull(TaskList.ReadFile(FileName));
+    }   //Verifies that valid files are read.
+    @Test public void
+    invalidReadFile() {
+        String FileName = "Test.txt";
+        File file = new File(FileName);
+        file.delete();
+        assertNull(TaskList.ReadFile(FileName));
+    }   //Verifies that valid files are read.
+    @Test public void
+    loadFileTest() {
+        String FileName = "Test.txt";
+        TaskList.ClearTaskList();
+        TaskList.addTask("title","description","2050-12-15");
+        TaskList.CreateFile(FileName);
+        assertTrue(TaskList.LoadFile(TaskList.ReadFile(FileName)));
+    }   //Verifies that files are loaded.
+    @Test public void
+    createFileTest() {
+        String FileName = "Test.txt";
+        TaskList.ClearTaskList();
+        TaskList.addTask("title","description","2050-12-15");
+        TaskList.CreateFile(FileName);
+        assertTrue(TaskList.LoadFile(TaskList.ReadFile(FileName)));
+    }   //Verifies that a file is created.
+    @Test public void
+    inputInvalidFileName() {
+        assertFalse(TaskList.ValidateFileName("Test/!.txt"));
+    }   //Attempts to use characters illegal in Windows
+    @Test public void
+    inputValidFileName() {
+        assertTrue(TaskList.ValidateFileName("Valid Title.txt"));
+    }   //Verifies that a (potentially) valid file name passes.
+    @Test public void
+    amassListInfoTest() {
+        TaskList.ClearTaskList();
         TaskList.addTask("title","description","YYYY-MM-DD");
         TaskList.addTask("title","description","YYYY-MM-DD");
+        String expectedString = "title\ndescription\nYYYY-MM-DD\nfalse\n" +
+                "title\ndescription\nYYYY-MM-DD\nfalse\n";
+        assertEquals(expectedString,TaskList.AmassListInfo());
+    }   //Verifies that a string is created with all TaskList information for saving.
+    @Test public void
+    saveFileTest() {
+        TaskList.ClearTaskList();
         TaskList.addTask("title","description","YYYY-MM-DD");
         TaskList.addTask("title","description","YYYY-MM-DD");
-        TaskList.editTask("No","Nope","5050-05-05", 2);
-        assertEquals(ExpectedTask.title,TaskList.List.get(2).title);
-        assertEquals(ExpectedTask.description,TaskList.List.get(2).description);
-        assertEquals(ExpectedTask.due_date,TaskList.List.get(2).due_date);
-    }   //Valid-invalid arguments are irrelevant here, as errors are handled previously.
+        String expectedString = "title\ndescription\nYYYY-MM-DD\nfalse\n" +
+                "title\ndescription\nYYYY-MM-DD\nfalse\n";
+        String FileName = "Test.txt";
+        TaskList.CreateFile(FileName);
+        TaskList.SaveTaskList(TaskList.AmassListInfo(), FileName);
+        TaskList.ClearTaskList();
+        TaskList.LoadFile(TaskList.ReadFile(FileName));
+        assertEquals(expectedString,TaskList.AmassListInfo());
+    }   //Verifies that a string is created with all TaskList information for saving.
     @Test public void
     inputIsValidMenuSelection() {
         assertEquals(1,App.MenuHandler(1,2));
@@ -168,50 +232,4 @@ public class TaskTest {
     inputIsNumber() {
         assertEquals(7,App.StringToInt("000000007"));
     }   //Verifies that numbers in string format are processed correctly.
-    @Test public void
-    testClearTaskList() {
-        TaskList.ClearTaskList();
-        TaskList.addTask("title","description","YYYY-MM-DD");
-        TaskList.addTask("title","description","YYYY-MM-DD");
-        TaskList.addTask("title","description","YYYY-MM-DD");
-        TaskList.addTask("title","description","YYYY-MM-DD");
-        assertEquals(4,TaskList.List.size());
-        TaskList.ClearTaskList();
-        assertEquals(0,TaskList.List.size());
-    }   //Verifies that clearing a static list (which equivalent to making a new one) works.
-    @Test public void
-    removingTaskItemsDecreasesSize() {
-        TaskList.ClearTaskList();
-        TaskList.addTask("title","description","YYYY-MM-DD");
-        TaskList.addTask("title","description","YYYY-MM-DD");
-        TaskList.addTask("title","description","YYYY-MM-DD");
-        TaskList.addTask("title","description","YYYY-MM-DD");
-        assertEquals(4,TaskList.List.size());
-        TaskList.removeTask(2);
-        assertEquals(3,TaskList.List.size());
-    }   //Verifies that a task is removed.
-        //It is not necessary to test invalid indexes, as that is handled by the MenuHandler.
-    @Test public void
-    savedTaskListCanBeLoaded() {
-        TaskList.ClearTaskList();
-        String expectedTitle = "No", expectedDescription = "Nope", expectedDue_Date = "5050-05-05";
-        TaskList.addTask("No","Nope","5050-05-05");
-        String FileName = TaskList.ValidateFileName("TestFile") + TaskList.extension;
-        TaskList.CreateFile(FileName);
-        TaskList.SaveTaskList(TaskList.AmassListInfo(), FileName);
-        String input = "TestFile" + TaskList.extension;
-        TaskList.LoadFile(TaskList.ReadFile(input));
-        assertEquals(expectedTitle,TaskList.List.get(1).title);
-        assertEquals(expectedDescription,TaskList.List.get(1).description);
-        assertEquals(expectedDue_Date,TaskList.List.get(1).due_date);
-    }   //Tests file creation, list saving, file opening, and list loading functions.
-    @Test public void
-    inputInvalidFileName() {
-        assertFalse(TaskList.ValidateFileName("efee/!.txt"));
-    }   //Attempts to use characters illegal in Windows
-    @Test public void
-    inputValidFileName() {
-        assertTrue(TaskList.ValidateFileName("Valid Title.txt"));
-    }   //Verifies that a (potentially) valid file name passes.
-
 }

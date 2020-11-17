@@ -52,11 +52,11 @@ public class TaskList {
         if(!complete) Prefix = "in";
         return Tasks + "\n\nSelect a task to mark " + Prefix + "complete: ";
     }
-    protected static boolean ValidateTask(String title, String due_date){
+    protected static boolean ValidateTask(String title, String due_date) {
         boolean validDate = TaskItem.Due_DateReport(TaskItem.Due_DateHandler(due_date));
         boolean validTitle = TaskItem.TitleHandler(title);
         return validDate && validTitle;
-    }
+    }   //Validates task information using functions in the Item class.
     protected static void editTask(String title, String description, String due_date, int index){
         List.get(index).title = title;
         List.get(index).description = description;
@@ -84,7 +84,7 @@ public class TaskList {
         BufferedReader input = null;
         try { input = new BufferedReader(new FileReader(FileName));
         } catch (IOException e) { System.out.println("\nThe file could not be found.\n"); }
-        System.out.println("\nThe list was found.\n");
+        if(input!=null) System.out.println("\nThe list was found.\n");
         return input;
     }
     protected static boolean LoadFile(BufferedReader input){
@@ -97,7 +97,6 @@ public class TaskList {
             if((tally + 3) % 4 == 0) description = placeholder;
             if((tally + 2) % 4 == 0) due_date = placeholder;
             if((tally + 1) % 4 == 0) {
-                if(!ValidateTask(title,due_date)) return false;
                 TaskItem Task = new TaskItem(title, description, due_date, Boolean.parseBoolean(placeholder));
                 List.add(Task); }
             tally++;
