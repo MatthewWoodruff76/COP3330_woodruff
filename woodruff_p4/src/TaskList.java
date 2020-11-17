@@ -88,7 +88,7 @@ public class TaskList {
         return input;
     }
     protected static boolean LoadFile(BufferedReader input){
-        int tally = 0;
+        int tally = 0, validity;
         String placeholder = "", title = "#null#", description = "#null#", due_date = "#null#";
         do {
             try { if ((placeholder = input.readLine()) == null) break;
@@ -97,6 +97,9 @@ public class TaskList {
             if((tally + 3) % 4 == 0) description = placeholder;
             if((tally + 2) % 4 == 0) due_date = placeholder;
             if((tally + 1) % 4 == 0) {
+                validity = TaskItem.Due_DateHandler(due_date);
+                if(validity % 3 == 0 || validity % 5 == 0 || validity % 7 == 0 || validity % 11 == 0 ||
+                        title.length() == 0) { return false; } //verifies input is a valid task
                 TaskItem Task = new TaskItem(title, description, due_date, Boolean.parseBoolean(placeholder));
                 List.add(Task); }
             tally++;

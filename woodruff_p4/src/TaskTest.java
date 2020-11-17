@@ -170,13 +170,26 @@ public class TaskTest {
         assertNull(TaskList.ReadFile(FileName));
     }   //Verifies that valid files are read.
     @Test public void
-    loadFileTest() {
+    loadFileTestValid() {
         String FileName = "Test.txt";
         TaskList.ClearTaskList();
         TaskList.addTask("title","description","2050-12-15");
         TaskList.CreateFile(FileName);
+        TaskList.SaveTaskList(TaskList.AmassListInfo(), FileName);
+        TaskList.ClearTaskList();
         assertTrue(TaskList.LoadFile(TaskList.ReadFile(FileName)));
     }   //Verifies that files are loaded.
+    @Test public void
+    loadFileTestInvalid() {
+        String FileName = "Test.txt";
+        TaskList.ClearTaskList();
+        TaskList.addTask("","description","2000-12-15");
+        TaskList.CreateFile(FileName);
+        TaskList.SaveTaskList(TaskList.AmassListInfo(), FileName);
+        TaskList.ClearTaskList();
+        assertFalse(TaskList.LoadFile(TaskList.ReadFile(FileName)));
+    }   //Verifies that invalid file contents are flagged.
+
     @Test public void
     createFileTest() {
         String FileName = "Test.txt";
@@ -205,10 +218,10 @@ public class TaskTest {
     @Test public void
     saveFileTest() {
         TaskList.ClearTaskList();
-        TaskList.addTask("title","description","YYYY-MM-DD");
-        TaskList.addTask("title","description","YYYY-MM-DD");
-        String expectedString = "title\ndescription\nYYYY-MM-DD\nfalse\n" +
-                "title\ndescription\nYYYY-MM-DD\nfalse\n";
+        TaskList.addTask("title","description","2090-09-02");
+        TaskList.addTask("title","description","3030-01-06");
+        String expectedString = "title\ndescription\n2090-09-02\nfalse\n" +
+                "title\ndescription\n3030-01-06\nfalse\n";
         String FileName = "Test.txt";
         TaskList.CreateFile(FileName);
         TaskList.SaveTaskList(TaskList.AmassListInfo(), FileName);

@@ -15,9 +15,9 @@ public class TaskItem {
         complete        =   completeIN;
     }
     protected static boolean Due_DateReport(int mistakes) {
-        if(mistakes % 5 == 0) System.out.println("\nYour due date does not adhere to the required formula.\n");
         if(mistakes % 2 == 0) System.out.println("\nYour due date is in the past.\n");
         if(mistakes % 3 == 0) System.out.println("\nYour due date is not a valid date.\n");
+        if(mistakes % 5 == 0) System.out.println("\nYour due date does not adhere to the required formula.\n");
         if(mistakes % 7 == 0) System.out.println("\nYour due date is not the right length.\n");
         if(mistakes % 11 == 0) System.out.println("\nYour due date is too short.  No further analysis performed.\n");
         return mistakes == 1;
