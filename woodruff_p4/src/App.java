@@ -13,16 +13,21 @@ public class App {
                 screenClear();
             } while(selection == -1);
             if (selection == 1) {
-                System.out.print("\nA new task has been created.\n");
+                System.out.print("\nA new task has been created.\n");   //Placebo.
             }
             if (selection == 2) {
+                String FileName = "";
                 do {
-                    do {
+                    do{
                         System.out.print("\nEnter file name (no extension): ");
-                        input = TaskList.ValidateFileName(in.nextLine() + TaskList.extension);
-                    } while (input.length() == 0);
-                } while (!TaskList.ReadProtection(input));
-                TaskList.LoadFile(TaskList.ReadFile(input));
+                        FileName = in.nextLine() + TaskList.extension;
+                    }while (!TaskList.ValidateFileName(FileName));
+                } while (!TaskList.ReadProtection(FileName));
+                boolean isValidFile = TaskList.LoadFile(TaskList.ReadFile(FileName));
+                if(!isValidFile){
+                    System.out.print("\nThe file you specified is not a valid task file.\nCreating new list.\n");
+                    TaskList.ClearTaskList();
+                }
             }
             //Ops menu
             if(selection != 3) {
@@ -54,7 +59,7 @@ public class App {
                 description = in.nextLine();
                 System.out.print("\nTask due date (YYYY-MM-DD): ");
                 due_date = in.nextLine();
-            } while (!TaskList.ValidateTask(title, due_date, description));
+            } while (!TaskList.ValidateTask(title, due_date));
             TaskList.addTask(title, description, due_date);
         }
         if(choice == 3) {
@@ -70,8 +75,8 @@ public class App {
                 description = in.nextLine();
                 System.out.print("\nTask due date (YYYY-MM-DD): ");
                 due_date = in.nextLine();
-            } while (!TaskList.ValidateTask(title, due_date, description));
-            TaskList.editVisibleTask(title, description, due_date, index);
+            } while (!TaskList.ValidateTask(title, due_date));
+            TaskList.editTask(title, description, due_date, index);
         }
         if(choice == 4) {
             screenClear();
@@ -80,7 +85,7 @@ public class App {
             do{
                 index = MenuHandler(StringToInt(in.nextLine()),TaskList.List.size());
             } while(index == -1);
-            TaskList.removeTask(index);
+            TaskList.removeTask(index-1);
         }
         if(choice == 5 || choice == 6) {
             screenClear();
@@ -93,22 +98,23 @@ public class App {
                     index = MenuHandler(StringToInt(in.nextLine()), key.length);
 
                 } while (index == -1);
-                TaskList.editInvisibleTask(key[index-1],!complete);
+                TaskList.editCompletionStatus(key[index-1],!complete);
             }
         }
         if(choice == 7) {
             screenClear();
             TaskList.PrintSavePrompt();
-            String FileName = TaskList.ValidateFileName(in.nextLine()) + TaskList.extension;
+            String FileName = "";
+            do{
+                System.out.print("\nEnter file name (no extension): ");
+                FileName = in.nextLine() + TaskList.extension;
+            }while (!TaskList.ValidateFileName(FileName));
             TaskList.CreateFile(FileName);
             TaskList.SaveTaskList(TaskList.AmassListInfo(), FileName);
         }
         if(choice == 8) {
-            ClearTaskList();
+            TaskList.ClearTaskList();
         }
-    }
-    protected static void ClearTaskList() {
-        for(int index = TaskList.List.size() - 1; index >= 0; index --) TaskList.List.remove(index);
     }
     protected static String     OpsMenu() {
         return "\n\nList Operation Menu\n" +
@@ -136,10 +142,11 @@ public class App {
     }
     protected static int StringToInt(String string){
         int number = 0, digit = 0;
-        for(int index = 0; index < string.length(); index++)
+        for(int index = 0; index < string.length(); index++){
             digit = string.charAt(index) - 48;
             if(digit > 9 || digit < 0) return 0;
-            number += digit;
+            number = 10*number + digit;
+        }
         return number;
     }
     protected static void screenClear(){
