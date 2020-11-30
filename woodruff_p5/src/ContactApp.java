@@ -1,4 +1,4 @@
-class ContactApp extends AppType {
+class ContactApp extends App {
 
     @Override
     void createList() { ContactList.newList(); }

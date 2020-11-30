@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class App {
+public abstract class App {
     public static void main(String[] args) {
         String choice = "0";
         Scanner in = new Scanner(System.in);
@@ -9,7 +9,7 @@ public class App {
                     "---------------------\n\n" +
                     "1) Task List\n2) Contact List\n3) Exit Program\n\n> ");
             choice = in.nextLine();
-            AppType List = null;
+            App List = null;
             if (choice.equals("1")) {
                 List = new TaskApp();
                 List.runMenu();
@@ -21,8 +21,6 @@ public class App {
             }
         }
     }
-}
-abstract class AppType{
     Scanner in = new Scanner(System.in);
     void runMenu(){
         String choice = "0";
@@ -68,4 +66,7 @@ abstract class AppType{
         return selection;
     }
     abstract int specifyItem(String condition, String action, int length);
+
+
+
 }

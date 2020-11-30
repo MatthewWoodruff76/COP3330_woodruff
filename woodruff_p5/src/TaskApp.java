@@ -1,4 +1,4 @@
-class TaskApp extends AppType {
+class TaskApp extends App {
     @Override
     void createList(){
         TaskList.newList();
