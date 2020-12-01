@@ -7,7 +7,7 @@ class ContactApp extends App {
         int selection;
         do {
             print(ContactList.ListInfo());
-            print("Which item would you like to " + action + "?\n> ");
+            print("\nWhich item would you like to " + action + "?\n> ");
             selection = getSelection(in.nextLine(), length);
         } while(selection==0);
         return selection;
@@ -17,7 +17,7 @@ class ContactApp extends App {
         String choice = "0";
         while (!choice.equals("6")) {
             int selection = 0;
-            print("\nList Operation Menu\n" +
+            print("\n\nList Operation Menu\n" +
                     "-------------------\n\n" +
                     "1) view the list\n" +
                     "2) add an item\n" +
@@ -41,7 +41,7 @@ class ContactApp extends App {
                 } else if (choice.equals("4")) {
                     selection = specifyItem("All", "remove", ContactList.contacts.size());
                     ContactList.removeContact(selection-1);
-                } else if (choice.equals("7")) {
+                } else if (choice.equals("5")) {
                     print(ContactList.SavePrompt());
                     String FileName;
                     do {
@@ -50,8 +50,8 @@ class ContactApp extends App {
                     } while (!ContactList.ValidateFileName(FileName));
                     ContactList.CreateFile(FileName);
                     ContactList.saveList(ContactList.AmassListInfo(), FileName);
-                } else if (!choice.equals("8")) {
-                    print("That wasn't an option.\n");
+                } else if (!choice.equals("6")) {
+                    print("\nThat wasn't an option.\n");
                 }
             }
         }
@@ -80,9 +80,9 @@ class ContactApp extends App {
             first = in.nextLine();
             print("\nLast name: ");
             last = in.nextLine();
-            print("\nPhone number: ");
+            print("\nPhone number (###-###-####): ");
             phone = in.nextLine();
-            print("\nEmail Address: ");
+            print("\nEmail Address (name@host.domain): ");
             email = in.nextLine();
             if(ContactItem.ContactIsValid(first,last,phone,email)){
                 ContactList.editContact(first,last,phone,email, index);

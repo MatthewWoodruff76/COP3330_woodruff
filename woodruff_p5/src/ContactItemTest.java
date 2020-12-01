@@ -88,9 +88,4 @@ public class ContactItemTest {
         contact.setPhone(expected);
         assertEquals(expected,contact.getPhone());
     }
-
-    @Test
-    public void testToString() {
-
-    }
 }

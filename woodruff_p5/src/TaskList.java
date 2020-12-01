@@ -37,14 +37,23 @@ public class TaskList {
         if(index < tasks.size()) return tasks.get(index).setTitle(newTitle);
         return false;
     }
-    public static boolean getDescription(int index) {
-        return index < tasks.size();
+    public static String getDescription(int index) {
+         if(index < tasks.size() && index >= 0){
+             return tasks.get(index).getDescription();
+         }
+         return null;
     }
-    public static boolean getDue_Date(int index) {
-        return index < tasks.size();
+    public static String getDue_Date(int index) {
+        if(index < tasks.size() && index >= 0){
+            return tasks.get(index).getDue_date();
+        }
+        return null;
     }
-    public static boolean getTitle(int index) {
-        return index < tasks.size();
+    public static String getTitle(int index) {
+        if(index < tasks.size() && index >= 0){
+            return tasks.get(index).getTitle();
+        }
+        return null;
     }
     protected static void saveList(String ListInfo, String FileName){
         try {
@@ -131,9 +140,9 @@ public class TaskList {
         }
         return getCompleteList();
     }
-
     public static boolean ValidateTask(String title, String due_date) {
-        return (TaskItem.DateIsValid(due_date) && TaskItem.TitleIsValid(title));
+        boolean validDate = TaskItem.DateIsValid(due_date), validTitle = TaskItem.TitleIsValid(title);
+        return (validDate && validTitle);
     }
 
     public static String SavePrompt() {

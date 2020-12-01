@@ -21,13 +21,20 @@ public class ContactItem {
     }
     static boolean PhoneIsValid(String phone_number) {
         if(phone_number.length()!=0){
-            if(phone_number.length()!=12) return false;
+            if(phone_number.length()!=12) {
+                System.out.print("\nYour phone number must be 12 units long.\n");
+                return false;
+            }
             String code[] = phone_number.split("-",0);
-            if(code.length!=3) return false;
+            if(code.length!=3) {
+                System.out.print("\nYour phone number does not follow the proper format.\n");
+                return false;
+            }
             for(int index = 0; index < 3; index++){
                 try{
                     Integer.parseInt(code[index]);
                 } catch (NumberFormatException e) {
+                    System.out.print("\nYour phone number contains invalid characters.\n");
                     return false;
                 }
             }
@@ -37,9 +44,15 @@ public class ContactItem {
     static boolean EmailIsValid(String email_address) {
         if(email_address.length()!=0){
             String[] header = email_address.split("@",0);
-            if(header.length!=2) return false;
+            if(header.length!=2) {
+                System.out.print("\nYour email is incomplete.\n");
+                return false;
+            }
             String[] footer = header[1].split("\\.", 0);
-            if(footer.length!=2) return false;
+            if(footer.length!=2) {
+                System.out.print("\nYour email is incomplete.\n");
+                return false;
+            }
         }
         return true;
     }

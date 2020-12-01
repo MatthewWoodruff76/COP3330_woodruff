@@ -5,7 +5,7 @@ public abstract class App {
         String choice = "0";
         Scanner in = new Scanner(System.in);
         while(!choice.equals("3")) {
-            System.out.print("Select An Application\n" +
+            System.out.print("\nSelect An Application\n" +
                     "---------------------\n\n" +
                     "1) Task List\n2) Contact List\n3) Exit Program\n\n> ");
             choice = in.nextLine();
@@ -34,7 +34,6 @@ public abstract class App {
                     "\n> ");
             choice = in.nextLine();
             if(choice.equals("1")){
-                print("You have selected to create a new list!\n");
                 createList();
                 ManageList();
             } else if(choice.equals("2")){
@@ -43,7 +42,6 @@ public abstract class App {
                 print("That wasn't an option.\n");
             }
         }
-
     }
     abstract void createList();
     abstract void ManageList();
@@ -57,16 +55,13 @@ public abstract class App {
             selection = Integer.parseInt(nextLine);
             if(selection > size || selection < 1){
                 selection = 0;
-                print("That wasn't a valid index.\n");
+                print("\nYour selection is not a valid index.\n");
             }
         } catch (NumberFormatException e) {
             selection = 0;
-            print("That wasn't a number.\n");
+            print("\nThat wasn't a number.\n");
         }
         return selection;
     }
     abstract int specifyItem(String condition, String action, int length);
-
-
-
 }

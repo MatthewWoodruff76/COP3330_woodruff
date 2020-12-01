@@ -76,32 +76,32 @@ public class TaskListTest {
     @Test
     public void gettingItemDescriptionFailsWithInvalidIndex(){
         TaskList.addTask("title", "description", "2090-03-29", false);
-        assertFalse(TaskList.getDescription(TaskList.tasks.size()));
+        assertTrue(TaskList.getDescription(TaskList.tasks.size())==null);
     }
     @Test
     public void gettingItemDescriptionSucceedsWithValidIndex(){
         TaskList.addTask("title", "description", "2090-03-29", false);
-        assertTrue(TaskList.getDescription(TaskList.tasks.size()-1));
+        assertTrue(TaskList.getDescription(TaskList.tasks.size()-1)=="description");
     }
     @Test
     public void gettingItemDueDateFailsWithInvalidIndex(){
         TaskList.addTask("title", "description", "2090-03-29", false);
-        assertFalse(TaskList.getDue_Date(TaskList.tasks.size()));
+        assertTrue(TaskList.getDue_Date(TaskList.tasks.size())==null);
     }
     @Test
     public void gettingItemDueDateSucceedsWithValidIndex(){
         TaskList.addTask("title", "description", "2090-03-29", false);
-        assertTrue(TaskList.getDue_Date(TaskList.tasks.size()-1));
+        assertTrue(TaskList.getDue_Date(TaskList.tasks.size()-1)=="2090-03-29");
     }
     @Test
     public void gettingItemTitleFailsWithInvalidIndex(){
         TaskList.addTask("title", "description", "2090-03-29", false);
-        assertFalse(TaskList.getTitle(TaskList.tasks.size()));
+        assertTrue(TaskList.getTitle(TaskList.tasks.size())==null);
     }
     @Test
     public void gettingItemTitleSucceedsWithValidIndex(){
         TaskList.addTask("title", "description", "2090-03-29", false);
-        assertTrue(TaskList.getTitle(TaskList.tasks.size()-1));
+        assertTrue(TaskList.getTitle(TaskList.tasks.size()-1)=="title");
     }
     @Test
     public void newListIsEmpty(){

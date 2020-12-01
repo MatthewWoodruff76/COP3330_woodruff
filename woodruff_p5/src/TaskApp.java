@@ -1,4 +1,5 @@
 class TaskApp extends App {
+
     @Override
     void createList(){
         TaskList.newList();
@@ -18,7 +19,7 @@ class TaskApp extends App {
         String choice = "0";
         while (!choice.equals("8")) {
             int selection;
-            print("\nList Operation Menu\n" +
+            print("\n\nList Operation Menu\n" +
                     "-------------------\n\n" +
                     "1) view the list\n" +
                     "2) add an item\n" +
@@ -66,7 +67,7 @@ class TaskApp extends App {
                     TaskList.CreateFile(FileName);
                     TaskList.saveList(TaskList.AmassListInfo(), FileName);
                 } else if (!choice.equals("8")) {
-                    print("That wasn't an option.\n");
+                    print("\nThat wasn't an option.\n");
                 }
             }
         }
@@ -89,10 +90,10 @@ class TaskApp extends App {
         }
         return true;
     }
+
     private void editItem(int index) {
-        String title;
-        String description;
-        String due_date;
+        String title, description, due_date;
+        boolean done;
         do {
             print("\nTask title: ");
             title = in.nextLine();
@@ -100,7 +101,9 @@ class TaskApp extends App {
             description = in.nextLine();
             print("\nTask due date (YYYY-MM-DD): ");
             due_date = in.nextLine();
-        } while (!TaskList.ValidateTask(title, due_date));
+            done = TaskList.ValidateTask(title, due_date);
+            if(!done) print("\nYour entry does not meet the stated criteria.\n");
+        } while (!done);
         TaskList.editTitle(index, title);
         TaskList.editDescription(index, description);
         TaskList.editDue_Date(index, due_date);

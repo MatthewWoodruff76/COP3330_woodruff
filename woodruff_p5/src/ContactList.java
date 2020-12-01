@@ -44,7 +44,7 @@ public class ContactList {
     }
     public static String SavePrompt() {
         return "\nYou have chosen to save your progress.\n" +
-                "After saving, you can close the List with 8 or continue modifying it.\n";
+                "After saving, you can close the List with 6 or continue modifying it.\n";
     }
     public static String getExtension() {
         return ".txt";
@@ -130,10 +130,10 @@ public class ContactList {
             phone = contacts.get(index).getPhone();
             email = contacts.get(index).getEmail();
             info += "\n" + (index + 1) + ") ";
-            if(first.length()!=0) info += first + "\n   ";
-            if(last.length()!=0) info += last + "\n   ";
-            if(phone.length()!=0) info += phone + "\n   ";
-            if(email.length()!=0) info += email;
+            if(first.length()!=0) info += "First Name: " + first + "\n   ";
+            if(last.length()!=0) info +=  "Last Name:  " + last + "\n   ";
+            if(phone.length()!=0) info += "Phone:      " + phone + "\n   ";
+            if(email.length()!=0) info += "Email:      " + email;
         }
         return info;
     }
