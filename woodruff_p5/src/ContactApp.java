@@ -60,13 +60,11 @@ class ContactApp extends App {
     @Override
     boolean loadList() {
         String FileName;
-        do {
             do{
                 print("\nEnter file name (no extension): ");
                 FileName = in.nextLine() + ContactList.getExtension();
             }while (!ContactList.ValidateFileName(FileName));
-        } while (!ContactList.fileExists(FileName));
-        if(!ContactList.loadList(FileName)){
+        if(!ContactList.fileExists(FileName)||!ContactList.loadList(FileName)){
             print("\nThe file you specified is not a valid contact list.\n");
             return false;
         }

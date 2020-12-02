@@ -78,13 +78,11 @@ class TaskApp extends App {
     @Override
     boolean loadList() {
         String FileName;
-        do {
-            do{
-                print("\nEnter file name (no extension): ");
-                FileName = in.nextLine() + TaskList.getExtension();
-            }while (!TaskList.ValidateFileName(FileName));
-        } while (!TaskList.fileExists(FileName));
-        if(!TaskList.loadList(FileName)){
+        do{
+            print("\nEnter file name (no extension): ");
+            FileName = in.nextLine() + TaskList.getExtension();
+        }while (!TaskList.ValidateFileName(FileName));
+        if(!TaskList.fileExists(FileName)||!TaskList.loadList(FileName)){
             print("\nThe file you specified is not a valid task list.\n");
             return false;
         }
