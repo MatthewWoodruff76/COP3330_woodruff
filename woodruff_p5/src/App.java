@@ -22,6 +22,7 @@ public abstract class App {
         }
     }
     Scanner in = new Scanner(System.in);
+
     void runMenu(){
         String choice = "0";
         while(!choice.equals("3")) {
@@ -46,9 +47,12 @@ public abstract class App {
     abstract void createList();
     abstract void ManageList();
     abstract boolean loadList();
+    abstract void editItem(int index);
+    abstract int specifyItem(String condition, String action, int length);
     static void print(String ToPrint){
         System.out.print(ToPrint);
-    }
+    }   //Quality of life function.
+
     int getSelection(String nextLine, int size) {
         int selection;
         try {
@@ -63,5 +67,5 @@ public abstract class App {
         }
         return selection;
     }
-    abstract int specifyItem(String condition, String action, int length);
+
 }

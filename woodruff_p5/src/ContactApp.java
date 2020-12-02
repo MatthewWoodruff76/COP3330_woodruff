@@ -72,7 +72,8 @@ class ContactApp extends App {
         }
         return true;
     }
-    private void editItem(int index) {
+    @Override
+    void editItem(int index) {
         String first, last, phone, email;
         boolean done = false;
         do {

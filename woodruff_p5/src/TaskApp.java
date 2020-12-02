@@ -90,8 +90,8 @@ class TaskApp extends App {
         }
         return true;
     }
-
-    private void editItem(int index) {
+    @Override
+    void editItem(int index) {
         String title, description, due_date;
         boolean done;
         do {
