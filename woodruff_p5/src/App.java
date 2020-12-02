@@ -22,7 +22,6 @@ public abstract class App {
         }
     }
     Scanner in = new Scanner(System.in);
-
     void runMenu(){
         String choice = "0";
         while(!choice.equals("3")) {
@@ -57,13 +56,12 @@ public abstract class App {
         int selection;
         try {
             selection = Integer.parseInt(nextLine);
-            if(selection > size || selection < 1){
-                selection = 0;
-                print("\nYour selection is not a valid index.\n");
-            }
         } catch (NumberFormatException e) {
             selection = 0;
             print("\nThat wasn't a number.\n");
+        } catch (IndexOutOfBoundsException e){
+            print("\nYour selection is not a valid index.\n");
+            return 0;
         }
         return selection;
     }
